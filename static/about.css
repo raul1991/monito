@@ -1,0 +1,27 @@
+
+.content {
+	position: relative;
+	top: 50%;
+	width: 70%;
+	margin: auto;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+.content p {
+	margin-top: 50px;
+	width: 100%;
+	font-family: Lato;
+	font-weight: 100;
+	font-size: 1.1em;
+	line-height: 1.6em;
+	color: white;
+	text-align: justify;
+}
+
+@media screen and (max-width: 700px) {
+	.content p {
+		line-height: 1.3em;
+	}
+}

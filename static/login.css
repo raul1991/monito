@@ -1,0 +1,13 @@
+
+.loginBox {
+	top: 63%;
+}
+
+form {
+	top: 80px;
+}
+
+@media screen and (max-height: 600px) {
+	.loginBox {
+		top: 68%;
+	}

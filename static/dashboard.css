@@ -1,0 +1,378 @@
+
+/***********************************
+	CSS Reset
+***********************************/
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/***********************************
+	Header
+***********************************/
+
+header {
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	width: 100%;
+	height: 70px;
+	margin: auto;
+	background: #fff;
+	box-shadow: 0px 0px 4px 1px #ccc;
+}
+
+.nav {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 90%;
+	margin: auto;
+	display: flex;
+	justify-content: space-between;
+	padding: 40px;
+}
+
+.logo img {
+	width: 140px;
+	margin-top: 3px;
+}
+
+.nav div {
+	margin-top: 18px;
+}
+
+.nav div a {
+	margin-left: 22px;
+	font-size: 1em;
+	font-family: Raleway;
+	font-weight: 400;
+	color: rgb(1,50,67);
+	text-decoration: none;
+}
+
+a:visited {
+	color: rgb(83,121,123);
+}
+
+/***********************************
+	Main Page
+***********************************/
+
+section {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	background: #fafafa;
+}
+
+/***********************************
+	Content
+***********************************/
+
+.main {
+	position: relative;
+	top: 170px;
+	width: 70%;
+	margin: auto;
+	font-family: Raleway;
+}
+
+.main h2 {
+	position: relative;
+	font-size: 2.7em;
+	color: rgb(1,50,67);
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.main h2 button {
+	position: relative;
+	top: -13px;
+	padding: 9px;
+	margin-left: 6px;
+	font-size: 0.3em;
+	font-family: Raleway;
+	font-weight: 100;
+	background: rgb(51, 110, 123);
+	color: #fff;
+	border: 0;
+	border-radius: 30px;
+	transition: 0.4s;
+}
+
+.main h2 button:hover {
+	font-size: 0.34em;
+	background: #fafafa;
+	border: 1px solid rgb(51, 110, 123);
+	color: #222;
+}
+
+.main p {
+	margin-top: 8px;
+	color: #222;
+	font-family: Lato;
+	font-weight: 300;
+	font-size: 1.2em;
+	line-height: 1.3em;
+}
+
+table {
+	margin: 80px 0px;
+	width: 100%;
+	font-family: Lato;
+}
+
+td, th {
+	vertical-align: middle;
+	text-align: center;
+}
+
+td {
+	padding: 15px;
+	font-weight: 200;
+	text-transform: capitalize;
+	line-height: 1.2em;
+}
+
+/*tr:nth-child(odd) {
+	background-color: #efefef;
+}*/
+
+td:nth-child(2) {
+	border-left: 1px solid #fff;
+}
+
+th {
+	height: 40px;
+	color: #fff;
+	font-weight: 300;
+	font-size: 1.2em;
+	background: rgb(51, 110, 123);
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	z-index: 5;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+	visibility: hidden;
+}
+
+.userInfo {
+	position: absolute;
+	left: 50%;
+	top: 100px;
+	-webkit-transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	transform: translateX(-50%);
+	width: 300px;
+	height: 400px;
+	background: #fafafa;
+	border: 1px solid rgb(51, 110, 123);
+	border-radius: 5px;
+	font-family: Raleway;
+	text-align: center;
+}
+
+.displayInfo {
+	visibility: visible;
+}
+
+.userInfo a {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	text-decoration: none;
+}
+
+.userInfo > div {
+	width: 90%;
+	margin: auto;
+	color: rgb(51, 110, 123);
+}
+
+.userInfo h2 {
+	margin: 80px 0px 40px 0px;
+	color: #222;
+	font-size: 1.6em;
+	text-align: center;
+}
+
+.userInfo .field {
+	margin: 12px;
+	color: #222;
+	font-size: 1em;
+	padding-left: 10px;
+	text-align: left;
+}
+
+.userInfo .name {
+	text-transform: capitalize;
+}
+
+.field span {
+	color: rgb(51, 110, 123);
+}
+
+.userInfo button {
+	margin-top: 30px;
+	color: #fff;
+	background: rgb(51, 110, 123);
+	border-radius: 30px;
+	font-size: 0.9em;
+	border: 0;
+	font-family: Raleway;
+	font-weight: 100;
+	padding: 10px;
+	transition: background 0.4s, border 0.4s, color 0.4s, font-size 0.4s;
+}
+
+.userInfo button:hover {
+	background: #fafafa;
+	border: 1px solid rgb(51, 110, 123);
+	color: #222;
+	font-size: 1em;
+}
+
+.updateMenu {
+	display: none;
+	height: 430px;
+}
+
+.displayUpdateMenu {
+	display: block;
+}
+
+.updateMenu input {
+	width: 85%;
+	border: 1px solid rgb(51, 110, 123);
+	border-radius: 20px;
+	padding: 8px;
+	margin: 8px;
+	font-size: 0.9em;
+	font-weight: 100;
+}
+
+.updateMenu input:focus {
+	outline: 0;
+}
+
+
+/***********************************
+	Media Queries
+***********************************/
+
+@media screen and (max-width: 700px) {
+	header {
+		height: 60px;
+	}
+
+	.logo img {
+		width: 110px;
+		margin-top: 5px;
+	}
+
+	.nav {
+		width: 100%;
+	}
+
+	.nav div {
+		margin-top: 12px;
+	}
+
+	.nav div a {
+		margin-left: 15px;
+		font-size: 0.85em;
+		font-family: Raleway;
+		font-weight: 400;
+		color: rgb(1,50,67);
+		text-decoration: none;
+	}
+
+	.main {
+		width: 80%;
+		top: 140px;
+	}
+
+	table {
+		margin: 60px 0px;
+	}
+
+	th {
+		font-size: 1.1em;
+	}
+
+	.main h2 {
+	font-size: 2.2em;
+	color: rgb(1,50,67);
+	font-weight: 500;
+	text-transform: capitalize;
+	}
+
+	.main p {
+		margin-top: 6px;
+		color: #222;
+		font-family: Lato;
+		font-weight: 300;
+		font-size: 1em;
+		line-height: 1.3em;
+		text-align: justify;
+	}
+
+	.main h2 button {
+		top: -10px;
+		margin-left: 4px;
+	}
+}

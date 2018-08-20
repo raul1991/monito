@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Monito.</title>
+
+	<!-- Stylesheet -->
+	<link rel="stylesheet" type="text/css" href="static/main.css">
+	<link rel="stylesheet" type="text/css" href="static/login.css">
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image" href="static/Monito.png">
+</head>
+<body>
+	<header>
+		<div>
+			<a href = "#" class = "ericsson">
+				<img src = "static/ericsson-logo.png">
+			</a>
+			<div class = "navigation">
+				<div class = "menu" onclick = "displayMenu()">
+					<div>
+						<div class = "bar"></div>
+						<div class = "bar"></div>
+						<div class = "bar"></div>
+					</div>
+					<span>MENU</span>
+				</div>
+				<nav>
+					<a href = "/about" class = "topLink">ABOUT</a>
+					<a href = "/">LOGIN</a>
+					<a href = "/register">REGISTER</a>
+				</nav>
+			</div>
+		</div>
+	</header>
+	<section>
+		<div class = "loginBox">
+			<div class = "logo">
+				<img src="static/Monito-1-light.png">
+			</div>
+			<form method = "POST" action = "/">
+				<div>
+					<label for = "username">USERNAME</label>
+	    			<input type = "text" id = "username" name = "username" placeholder = "signum" required>
+				</div>
+				<label>{{ SERVER_ERROR }}</label>
+				<button type ="submit">Login</button>
+			</form>
+		</div>
+	</section>
+
+	<!-- Scripts -->
+	<script type="text/javascript" src="static/main.js"></script>
+</body>
+</html>

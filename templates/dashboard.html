@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Dashboard</title>
+
+	<!-- Stylesheet -->
+	<link rel="stylesheet" type="text/css" href="static/dashboard.css">
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image" href="static/Monito.png">
+</head>
+<body onload="getAllMappings()">
+	<section>
+		<header>
+			<div class = "nav">
+				<a href = "#" class = "logo">
+					<img src="static/Monito-1-dark.png">
+				<a>
+				<div>
+					<a href="mailto:user@abc.xyz?Subject=Monito%20Feedback">CONTACT</a>
+					<a href="/">LOGOUT</a>
+				</div>
+			</div>
+		</header>
+		<div class = "main">
+			<h2>Hello {{ currentUser.name }}! <button onclick="displayInfo(1)">User Info</button></h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eget ligula tortor. Quisque ut faucibus massa. Mauris vitae neque libero.</p>
+			<table>
+				<tr>
+					<th>Machine</th>
+					<th>User(s)</th>
+				</tr>
+			</table>
+		</div>
+		<div class = "overlay">
+			<div class = "userInfo">
+				<!-- <a href="#" onclick="displayInfo(2)">Close</a> -->
+				<div>
+					<h2>Your Information</h2>
+					<div class = "field name">Name: <span>{{ currentUser.name }}</span></div>
+					<div class = "field">Username: <span>{{ currentUser.username }}</span></div>
+					<div class = "field">Email: <span>{{ currentUser.email }}</span></div>
+					<div class = "field">VDA-IP: <span>{{ currentUser.vdaIP }}</span></div>
+					<!-- <button onclick = "updateInfoMenu()">Update Info</button> -->
+					<button onclick = "displayInfo(2)">Close</button>
+				</div>
+			</div>
+			<!--
+			<div class = "userInfo updateMenu">
+				<a href="#" onclick="updateInfoMenu();displayInfo(2);">Close</a>
+				<div>
+					<h2>Update Information</h2>
+					<div class = "field">Username: <span>{{ currentUser.username }}</span></div>
+					<input type="text" name="user_name" value="{{currentUser.name}}" pattern="^[a-zA-Z]{5,15}$" class = "name">
+					<input type="email" name="user_email" value = {{currentUser.email}}>
+					<input type="text" name="user_vdaIP" value = {{currentUser.vdaIP}} pattern = "^[0-9.]*$">
+					<button onclick="updateInfo()">Submit</button>
+				</div>
+			</div>	
+			-->	
+		</div>
+	</section>
+
+	<!-- Scripts -->
+	<script type="text/javascript" src="static/main.js"></script>
+</body>
+</html>
