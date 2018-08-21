@@ -60,8 +60,7 @@ function sendRequest(config, action){
 }
 
 function getAllMappings() {
-	setInterval(function() {
-
+	function updateTable() {
 		var table = document.querySelector('table');
 		table.innerHTML = '<tr><th>Machine</th><th>User(s)</th></tr>';
 
@@ -84,6 +83,9 @@ function getAllMappings() {
 				console.log('Empty');
 			}
 		});
-	}, 1000 * 10);
+	}
+
+	updateTable();
+	setInterval(updateTable, 1000 * 10);
 }
 

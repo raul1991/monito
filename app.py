@@ -14,7 +14,7 @@ databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
-app.config["PERMANENT_SESSION_LIFETIME"] = 600 # 300 seconds
+app.config["PERMANENT_SESSION_LIFETIME"] = 600 # 600 seconds
 
 db = SQLAlchemy(app)
 
@@ -79,7 +79,7 @@ def register():
 
 			return redirect('/')
 
-		return render_template('register.html', SERVER_ERROR = 'Oops! Something went wrong!')
+		return render_template('register.html', SERVER_ERROR = 'User already exists!')
 
 	return render_template('register.html')
 

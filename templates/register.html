@@ -14,12 +14,21 @@
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
 
 	<!-- Favicon -->
-	<link rel="icon" type="image" href="static/Monito.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/Icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/Monito.png">
+	<link rel="manifest" href="/static/Icons/site.webmanifest">
+	<link rel="mask-icon" href="/static/Icons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/static/Monito.png">
+	<meta name="apple-mobile-web-app-title" content="Monito.">
+	<meta name="application-name" content="Monito.">
+	<meta name="msapplication-TileColor" content="#00aba9">
+	<meta name="msapplication-config" content="/static/Icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
 </head>
 <body>
 	<header>
 		<div>
-			<a href = "#" class = "ericsson">
+			<a href = "https://www.ericsson.com/en" target = "_blank" class = "ericsson">
 				<img src = "static/ericsson-logo.png">
 			</a>
 			<div class = "navigation">
@@ -50,11 +59,11 @@
 			<form action = "/register" method = "POST">
 				<div>
 					<label for = "name">NAME</label>
-	    			<input type = "text" id = "name" name = "user_name" placeholder = "full name" pattern="^[a-zA-Z ]*$" required>
+	    			<input type = "text" id = "name" name = "user_name" placeholder = "full name" pattern="^[a-zA-Z ]+$" required>
 				</div>
 				<div>
 					<label for = "username">USERNAME</label>
-	    			<input type = "text" id = "username" name = "username" placeholder = "signum" pattern="^[a-zA-Z]*$" required>
+	    			<input type = "text" id = "username" name = "username" placeholder = "signum" pattern="^[a-zA-Z]{5,15}$" required>
 				</div>
 				<div>
 					<label for = "email">EMAIL</label>
@@ -62,7 +71,7 @@
 				</div>
 				<div>
 					<label for = "vda-ip">VDA-IP</label>
-	    			<input type = "text" id = "vda-ip" name = "user_vda-ip" placeholder = "xxx.xxx.xx.x" pattern = "^[0-9.]*$" required>
+	    			<input type = "text" id = "vda-ip" name = "user_vda-ip" placeholder = "xxx.xxx.xx.x" pattern = "^[0-9.]+$" required>
 				</div>
 				<label>{{ SERVER_ERROR }}</label>
 				<button type="submit">Register</button>

@@ -14,7 +14,16 @@
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
 
 	<!-- Favicon -->
-	<link rel="icon" type="image" href="static/Monito.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/Icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/Monito.png">
+	<link rel="manifest" href="/static/Icons/site.webmanifest">
+	<link rel="mask-icon" href="/static/Icons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/static/Monito.png">
+	<meta name="apple-mobile-web-app-title" content="Monito.">
+	<meta name="application-name" content="Monito.">
+	<meta name="msapplication-TileColor" content="#00aba9">
+	<meta name="msapplication-config" content="/static/Icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
 </head>
 <body onload="getAllMappings()">
 	<section>
@@ -31,7 +40,7 @@
 		</header>
 		<div class = "main">
 			<h2>Hello {{ currentUser.name }}! <button onclick="displayInfo(1)">User Info</button></h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eget ligula tortor. Quisque ut faucibus massa. Mauris vitae neque libero.</p>
+			<p>Here are all the available machines(IPs) along with the active users. The machines with no users are completely free.</p>
 			<table>
 				<tr>
 					<th>Machine</th>

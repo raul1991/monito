@@ -305,3 +305,8 @@ label {
 	}
 }
 
+@media screen and (max-width: 450px) {
+	input, label {
+		font-weight: 300;
+	}
+}
