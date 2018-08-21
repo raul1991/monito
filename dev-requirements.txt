@@ -4,6 +4,8 @@ Flask-SQLAlchemy==2.3.2
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
-simplejson==3.16.0
+pytz==2018.5
+six==1.11.0
 SQLAlchemy==1.2.10
+tzlocal==1.5.1
 Werkzeug==0.14.1
