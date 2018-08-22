@@ -24,6 +24,7 @@ class User(db.Model):
 	username = db.Column(db.String(20), unique = True)
 	email = db.Column(db.String(30), unique = True)
 	vdaIP = db.Column(db.String(15), unique = True)
+	hostname = db.Column(db.String(50), unique = True)
 
 	def __repr__(self):
 		return ("<Name: {}>".format(self.name) + 
@@ -34,7 +35,7 @@ class User(db.Model):
 class Machine(db.Model):
 	id = db.Column('machineID', db.Integer, primary_key = True)
 	IP = db.Column(db.String(15), unique = True)
-	vdaIPs = db.Column(db.String(50))
+	vdaIPs = db.Column(db.String(200))
 
 	def __repr__(self):
 		return ("<Machine IP: {}".format(self.IP) + " VDA-IPs: {}>".format(self.vdaIPs))
@@ -67,11 +68,14 @@ def register():
 		user = User(name = request.form.get('user_name').lower(), 
 			username = request.form.get('username').lower(), 
 			email = request.form.get('user_email').lower(),
-			vdaIP = request.form.get('user_vda-ip'))
+			vdaIP = request.form.get('user_vda-ip'),
+			hostname = request.form.get('user_hostname').lower())
 
 		for elem in users:
-			if elem.username == user.username or elem.email == user.email or elem.vdaIP == user.vdaIP:
+			if elem.username == user.username or elem.email == user.email \
+			or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
 				userExists = True
+				break
 
 		if not userExists:
 			db.session.add(user)
@@ -124,10 +128,13 @@ def mappings():
 		vdaNameMap = ''
 
 		for IP in vdaIPs:
-			user = User.query.filter_by(vdaIP = IP).first()
+			userByVDA = User.query.filter_by(vdaIP = IP).first()
+			userByHost = User.query.filter_by(hostname = IP.lower()).first()
 
-			if user:
-				vdaNameMap += user.name + ','
+			if userByVDA:
+				vdaNameMap += userByVDA.name + ','
+			elif userByHost:
+				vdaNameMap += userByHost.name + ','
 			else:
 				vdaNameMap += IP + ','
 
@@ -135,16 +142,16 @@ def mappings():
 
 	return machinesStr[:-1]
 
-@app.route('/update', methods = ["POST"])
-def update():
-	if request.form:
-		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
-				IP = request.form.get('machine_ip'))
+# @app.route('/update', methods = ["POST"])
+# def update():
+# 	if request.form:
+# 		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
+# 				IP = request.form.get('machine_ip'))
 
-		db.session.add(machine)
-		db.session.commit()
+# 		db.session.add(machine)
+# 		db.session.commit()
 
-		return "Added Machine and Users"
+# 		return "Added Machine and Users"
 
 
 def isUserLoggedIn():
