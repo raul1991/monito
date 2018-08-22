@@ -130,7 +130,6 @@ section {
 	width: 100%;
 	height: 100vh;
 	overflow-y: scroll;
-	padding-bottom: 70px;
 	background: -webkit-linear-gradient(135deg, rgb(1,50,67), rgb(51, 110, 123));
 	background: -o-linear-gradient(135deg, rgb(1,50,67), rgb(51, 110, 123));
 	background: linear-gradient(-45deg, rgb(1,50,67), rgb(51, 110, 123));
@@ -269,6 +268,10 @@ label {
 }
 
 @media screen and (max-height: 600px) {
+	section {
+		padding: 50px 0px;
+	}
+
 	.loginBox {
 		width: 270px;
 		top: 58%;

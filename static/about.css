@@ -1,7 +1,7 @@
 
 .content {
 	position: relative;
-	top: 50%;
+	top: 45%;
 	width: 70%;
 	margin: auto;
 	-webkit-transform: translateY(-50%);
@@ -10,7 +10,7 @@
 }
 
 .content p {
-	margin-top: 50px;
+	margin-top: 40px;
 	width: 100%;
 	font-family: Lato;
 	font-weight: 100;

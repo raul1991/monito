@@ -22,23 +22,22 @@ class User(db.Model):
 	id = db.Column('userID', db.Integer, primary_key = True)
 	name = db.Column(db.String(30))
 	username = db.Column(db.String(20), unique = True)
-	email = db.Column(db.String(30), unique = True)
 	vdaIP = db.Column(db.String(15), unique = True)
 	hostname = db.Column(db.String(50), unique = True)
 
 	def __repr__(self):
 		return ("<Name: {}>".format(self.name) + 
 		"<Username: {}>".format(self.username) + 
-		"<Email: {}>".format(self.email) + 
 		"<VDA-IP: {}>".format(self.vdaIP))
 
 class Machine(db.Model):
 	id = db.Column('machineID', db.Integer, primary_key = True)
 	IP = db.Column(db.String(15), unique = True)
 	vdaIPs = db.Column(db.String(200))
+	team = db.Column(db.String(10))
 
 	def __repr__(self):
-		return ("<Machine IP: {}".format(self.IP) + " VDA-IPs: {}>".format(self.vdaIPs))
+		return ("<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Team: {}>".format(self.team))
 
 
 @app.route('/', methods = ["GET", "POST"])
@@ -67,13 +66,11 @@ def register():
 
 		user = User(name = request.form.get('user_name').lower(), 
 			username = request.form.get('username').lower(), 
-			email = request.form.get('user_email').lower(),
 			vdaIP = request.form.get('user_vda-ip'),
 			hostname = request.form.get('user_hostname').lower())
 
 		for elem in users:
-			if elem.username == user.username or elem.email == user.email \
-			or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
+			if elem.username == user.username or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
 				userExists = True
 				break
 
@@ -105,7 +102,8 @@ def dashboard():
 def mapping():
 	if request.form:
 		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
-				IP = request.form.get('machine_ip'))
+				IP = request.form.get('machine_ip'),
+				team = request.form.get('team'))
 		dbMachine = Machine.query.filter_by(IP = machine.IP).first()
 		
 		if dbMachine:
@@ -138,7 +136,7 @@ def mappings():
 			else:
 				vdaNameMap += IP.lower() + ','
 
-		machinesStr += machine.IP + ':' + vdaNameMap[:-1] + ';'
+		machinesStr += machine.IP + ':' + machine.team + ':' + vdaNameMap[:-1] + ';'
 
 	return machinesStr[:-1]
 

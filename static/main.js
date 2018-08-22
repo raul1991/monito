@@ -62,7 +62,7 @@ function sendRequest(config, action){
 function getAllMappings() {
 	function updateTable() {
 		var table = document.querySelector('table');
-		table.innerHTML = '<tr><th>Machine</th><th>User(s)</th></tr>';
+		table.innerHTML = '<tr><th>Machine</th><th>Team</th><th>User(s)</th></tr>';
 
 		sendRequest({'requestType': 'GET', 'url': '/mappings'}, function(XMLObj) {
 			var response = XMLObj.responseText;
@@ -77,7 +77,7 @@ function getAllMappings() {
 						background = '#efefef';
 					}
 					
-					table.innerHTML += '<tr style = "background:' + background + ';"><td>' + response[i].split(':')[0] + '</td><td>' + response[i].split(':')[1].split(',').join(', ') + '</td></tr>'
+					table.innerHTML += '<tr style = "background:' + background + ';"><td>' + response[i].split(':')[0] + '</td><td>' + response[i].split(':')[1] + '</td><td>' + response[i].split(':')[2].split(',').join(', ') + '</td></tr>'
 				}
 			} else {
 				console.log('Empty');
