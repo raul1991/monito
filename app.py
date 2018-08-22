@@ -136,7 +136,7 @@ def mappings():
 			elif userByHost:
 				vdaNameMap += userByHost.name + ','
 			else:
-				vdaNameMap += IP + ','
+				vdaNameMap += IP.lower() + ','
 
 		machinesStr += machine.IP + ':' + vdaNameMap[:-1] + ';'
 
