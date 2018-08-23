@@ -12,10 +12,11 @@ This repo is for Monito related development and issues.
 * Run the flask app 
 	`python app.py`
 * Dependencies
-	* sqllite3
+	* sqlite3
 	* python3
+	* git-bash or bash
 * Database configuration
 * How to run tests
 * Deployment instructions
-	* Make sure sqllite3 is installed and accessible.
+	* Make sure sqlite3 is installed and accessible.
 	* Provide the url in the app.py file

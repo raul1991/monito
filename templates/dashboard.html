@@ -29,7 +29,7 @@
 	<section>
 		<header>
 			<div class = "nav">
-				<a href = "#" class = "logo">
+				<a href = "/dashboard" class = "logo">
 					<img src="static/Monito-1-dark.png">
 				<a>
 				<div>
@@ -40,10 +40,11 @@
 		</header>
 		<div class = "main">
 			<h2>Hello {{ currentUser.name }}! <button onclick="displayInfo(1)">User Info</button></h2>
-			<p>Here are all the available machines(IPs) along with the active users. The information gets updated every 10 seconds.</p>
+			<p>Here are all the available machines along with the active users. The information gets updated every 10 seconds.</p>
 			<table>
 				<tr>
 					<th>Machine</th>
+					<th>Owner</th>
 					<th>User(s)</th>
 				</tr>
 			</table>

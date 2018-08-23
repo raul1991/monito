@@ -245,7 +245,7 @@ th {
 }
 
 .userInfo h2 {
-	margin: 60px 0px 40px 0px;
+	margin: 70px 0px 40px 0px;
 	color: #222;
 	font-size: 1.6em;
 	text-align: center;
@@ -287,7 +287,7 @@ th {
 	font-size: 1em;
 }
 
-.updateMenu {
+/*.updateMenu {
 	display: none;
 	height: 430px;
 }
@@ -308,7 +308,7 @@ th {
 
 .updateMenu input:focus {
 	outline: 0;
-}
+}*/
 
 
 /***********************************

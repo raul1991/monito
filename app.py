@@ -33,10 +33,10 @@ class Machine(db.Model):
 	id = db.Column('machineID', db.Integer, primary_key = True)
 	IP = db.Column(db.String(15), unique = True)
 	vdaIPs = db.Column(db.String(200))
-	team = db.Column(db.String(10))
+	owner = db.Column(db.String(10))
 
 	def __repr__(self):
-		return ("<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Team: {}>".format(self.team))
+		return ("<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(self.owner))
 
 
 @app.route('/', methods = ["GET", "POST"])
@@ -102,7 +102,7 @@ def mapping():
 	if request.form:
 		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
 				IP = request.form.get('machine_ip'),
-				team = request.form.get('team').lower())
+				owner = request.form.get('owner').lower())
 		dbMachine = Machine.query.filter_by(IP = machine.IP).first()
 		
 		if dbMachine:
@@ -135,7 +135,7 @@ def mappings():
 			else:
 				vdaNameMap += IP.lower() + ','
 
-		machinesStr += machine.IP + ':' + machine.team + ':' + vdaNameMap[:-1] + ';'
+		machinesStr += machine.IP + ':' + machine.owner + ':' + vdaNameMap[:-1] + ';'
 
 	return machinesStr[:-1]
 

@@ -62,7 +62,7 @@ function sendRequest(config, action){
 function getAllMappings() {
 	function updateTable() {
 		var table = document.querySelector('table');
-		table.innerHTML = '<tr><th>Machine</th><th>Team</th><th>User(s)</th></tr>';
+		table.innerHTML = '<tr><th>Machine</th><th>Owner</th><th>User(s)</th></tr>';
 
 		sendRequest({'requestType': 'GET', 'url': '/mappings'}, function(XMLObj) {
 			var response = XMLObj.responseText;
