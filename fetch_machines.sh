@@ -12,15 +12,15 @@ function getVisitors
    	
    for machine in ${machines}
    do
+	team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
 	machine=$(echo "${machine}" | awk '{split($0,tokens,","); print tokens[1]}')
 	echo "Running ${cmd} on ${machine}"
 
 	#if [[ ${states["$machine"]} == "" ]];then
 		
-		result=$(ssh -t admin@${machine} ${cmd})
+		result=$(ssh -o ConnectTimeout=10 -o BatchMode=yes -o StrictHostKeyChecking=no -t admin@${machine} ${cmd})
 		isMachineUp=$?
 		ips=()
-		isAnyOtherUser="false"
 		for user in ${result}
 		do
 			shopt -s nocasematch
@@ -36,7 +36,8 @@ function getVisitors
 				ips="Free";
 			fi
 		fi
-		curl -X POST http://localhost:5000/mapping -F "vda_ips=$(join_by , "${ips}")" -F "machine_ip=${machine}"
+		echo "Users available on ${machine} => $ips"
+		addMachine $(join_by , "${ips}") "${machine}" "${team}"
 	#fi
    done
 }
@@ -47,13 +48,12 @@ function addKeys
   do
 	machine=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[1]}')
 	team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
-	echo "team - $team"
-	addMachine "$machine" "$team"
+	echo "Adding machine ${m} to team $team"
+	addMachine "Free" "$machine" "$team"
 	exits=$(cat ${HOME}/.ssh/known_hosts | grep "${machine}")
 	exists=$?
 	if [[ ${exists} -ne 0 ]];then
-		echo "Adding keys for machine - ${machine}"
-		echo "Running command - ssh-copy-id admin@${machine}"
+		echo "Running command => ssh-copy-id admin@${machine}"
 		ssh-copy-id admin@${machine}
 		isMachineUp=$?
 	fi
@@ -64,7 +64,7 @@ function addMachine
 {
 	# first argument - machine name
 	# second argument - team name
-	curl -X POST http://localhost:5000/mapping -F "team=$2" -F "vda_ips=Free" -F "machine_ip=$1"
+	curl -X POST http://localhost:5000/mapping -F "team=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
 }
 
 addKeys
