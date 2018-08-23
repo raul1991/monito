@@ -1,17 +1,20 @@
 #!/bin/bash
-machines=`cat machines.txt`
+if [[ -z $1 ]];then
+	echo "Path to config file (*.machines file) is missing";
+	exit
+fi
+machines=`cat $1`
 cmd='who | grep -oE "([a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+)"'
 myHostName=`hostname`
-# dictonary for machine states
-states=()
 function join_by { local IFS="$1"; shift; echo "$*"; }
 function getVisitors
 {
    	
    for machine in ${machines}
    do
-	addMachine "${machine}"
+	machine=$(echo "${machine}" | awk '{split($0,tokens,","); print tokens[1]}')
 	echo "Running ${cmd} on ${machine}"
+
 	#if [[ ${states["$machine"]} == "" ]];then
 		
 		result=$(ssh -t admin@${machine} ${cmd})
@@ -40,26 +43,28 @@ function getVisitors
 
 function addKeys
 {
-  for machine in ${machines}
+  for m in ${machines}
   do
-	cat machines.txt | grep "${machine}"
+	machine=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[1]}')
+	team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
+	echo "team - $team"
+	addMachine "$machine" "$team"
+	exits=$(cat ${HOME}/.ssh/known_hosts | grep "${machine}")
 	exists=$?
 	if [[ ${exists} -ne 0 ]];then
 		echo "Adding keys for machine - ${machine}"
-		ssh-copy-id ${username}@${machine}
+		echo "Running command - ssh-copy-id admin@${machine}"
+		ssh-copy-id admin@${machine}
 		isMachineUp=$?
-		if [[ ${isMachineUp} == 0 ]];then
-			${states["${isMachineUp}"]}="true"
-		else
-			${states["${isMachineUp}"]}="false"
-		fi
 	fi
   done
 }
 
 function addMachine
 {
-	states["$1"]=""
+	# first argument - machine name
+	# second argument - team name
+	curl -X POST http://localhost:5000/mapping -F "team=$2" -F "vda_ips=Free" -F "machine_ip=$1"
 }
 
 addKeys

@@ -1,4 +1,4 @@
 myvenv/**
 __pycache__/**
 Monito.db
-machines.txt
+*.machines
