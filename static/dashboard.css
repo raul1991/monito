@@ -143,7 +143,7 @@ section {
 	margin-left: 6px;
 	font-size: 0.3em;
 	font-family: Raleway;
-	font-weight: 100;
+	font-weight: 300;
 	background: rgb(51, 110, 123);
 	color: #fff;
 	border: 0;
@@ -275,7 +275,7 @@ th {
 	font-size: 0.9em;
 	border: 0;
 	font-family: Raleway;
-	font-weight: 100;
+	font-weight: 300;
 	padding: 10px;
 	transition: background 0.4s, border 0.4s, color 0.4s, font-size 0.4s;
 }

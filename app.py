@@ -14,8 +14,7 @@ databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
-app.config["PERMANENT_SESSION_LIFETIME"] = 600 # 600 seconds
-
+app.config["PERMANENT_SESSION_LIFETIME"] = 900 # seconds
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -103,7 +102,7 @@ def mapping():
 	if request.form:
 		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
 				IP = request.form.get('machine_ip'),
-				team = request.form.get('team'))
+				team = request.form.get('team').lower())
 		dbMachine = Machine.query.filter_by(IP = machine.IP).first()
 		
 		if dbMachine:
