@@ -16,7 +16,15 @@ This repo is for Monito related development and issues.
 	* python3
 	* git-bash or bash
 * Database configuration
-* How to run tests
-* Deployment instructions
-	* Make sure sqlite3 is installed and accessible.
-	* Provide the url in the app.py file
+* How to run the app
+	* Clone the project
+	* pip install -r dev-requirements.txt
+	* Give execute permissions to the script (fetch_machines.sh)
+	* Run the app
+		python app.py
+	* Open the browser
+		http://<host-name>:5000
+	* Create a csv file (without headers) with hostnames and team-names separated by comma on each line.
+	* Start the script
+		./fetch_machines.sh /path/to/machinefile
+	* Make sure to keep the machine file in the same directory as your project.
