@@ -64,7 +64,7 @@ function addMachine
 {
 	# first argument - machine name
 	# second argument - team name
-	curl -X POST http://localhost:5000/mapping -F "team=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
+	curl -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
 }
 
 addKeys
