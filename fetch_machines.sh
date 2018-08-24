@@ -12,7 +12,7 @@ function getVisitors
    	
    for machine in ${machines}
    do
-	team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
+	team=$(echo "${machine}" | awk '{split($0,tokens,","); print tokens[2]}')
 	machine=$(echo "${machine}" | awk '{split($0,tokens,","); print tokens[1]}')
 	echo "Running ${cmd} on ${machine}"
 
@@ -30,7 +30,7 @@ function getVisitors
 			shopt -u nocasematch
 		done
 		if [[ $isMachineUp -ne 0 ]];then
-			ips=("Unable to connect"); 
+			ips=("Unable-To-Connect");
 		else
 			if [[ $ips == "" ]];then
 				ips="Free";
