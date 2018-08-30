@@ -13,7 +13,7 @@ function join_by { local IFS="$1"; shift; echo "$*"; }
 function getVisitors
 {
 	machine="$1"
-	team="$2"	
+	team="$2"
 	user="$3"
 	echo "Running ${cmd} on ${machine}"
 

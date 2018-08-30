@@ -9,8 +9,6 @@ This repo is for Monito related development and issues.
 ### How do I get set up? ###
 
 * Clone the project
-* Run the flask app 
-	`python app.py`
 * Dependencies
 	* sqlite3
 	* python3
@@ -18,13 +16,18 @@ This repo is for Monito related development and issues.
 * Database configuration
 * How to run the app
 	* Clone the project
-	* pip install -r dev-requirements.txt
+	* Install dependencies
+		- `pip install -r dev-requirements.txt`
 	* Give execute permissions to the script (fetch_machines.sh)
+		- `chmod +x ./fetch_machines.sh`
 	* Run the app
 		python app.py
 	* Open the browser
 		http://<host-name>:5000
 	* Create a csv file (without headers) with hostnames and team-names separated by comma on each line.
 	* Start the script
-		./fetch_machines.sh /path/to/machinefile
-	* Make sure to keep the machine file in the same directory as your project.
+		./fetch_machines.sh -f /path/to/machinefile -k /path/to/ssh-key/file [-m <false/true>]
+	* Use -h for help menu
+	* For simplicity, keep the machine file in the same directory as your project and save it .machines file.
+* Adding machines
+	* Restart the script in order to load more machines
