@@ -2,3 +2,4 @@ myvenv/**
 __pycache__/**
 Monito.db
 *.machines
+.idea/**
