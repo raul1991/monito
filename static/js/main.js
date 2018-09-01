@@ -2,6 +2,21 @@
 //Responsive menu
 
 var display = false;
+var showAlert = false;
+var alertBox = document.getElementById('alertBox');
+var refreshIntervalId; // used to store the refresh interval id in order to clear it later on.
+var cookies = {
+    'refreshInterval': 'prefs.refresh'
+}
+function restorePreferences()
+{
+    setPreferences(getCookie(cookies.refreshInterval));
+}
+
+function setPreferences(state)
+{
+    state.toLocaleLowerCase() === "enable" ? onRefreshEnabled() : onRefreshDisabled();
+}
 
 function displayMenu() {
 	var menu = document.querySelector('.menu');
@@ -59,33 +74,88 @@ function sendRequest(config, action){
 	xmlRequest.send();
 }
 
-function getAllMappings() {
-	function updateTable() {
-		var table = document.querySelector('table');
-		table.innerHTML = '<tr><th>Machine</th><th>Owner</th><th>User(s)</th></tr>';
-
-		sendRequest({'requestType': 'GET', 'url': '/mappings'}, function(XMLObj) {
-			var response = XMLObj.responseText;
-
-			if(response) {
-				response = response.split(';');
-
-				for(var i = 0; i < response.length; i++) {
-					if(i % 2 == 0) {
-						background = '#fff';
-					} else {
-						background = '#efefef';
-					}
-					
-					table.innerHTML += '<tr style = "background:' + background + ';"><td>' + response[i].split(':')[0] + '</td><td>' + response[i].split(':')[1] + '</td><td>' + response[i].split(':')[2].split(',').join(', ') + '</td></tr>'
-				}
-			} else {
-				console.log('Empty');
-			}
-		});
-	}
-
-	updateTable();
-	setInterval(updateTable, 1000 * 10);
+function onRefreshEnabled()
+{
+    if (!refreshIntervalId)
+    {
+        refreshIntervalId = setInterval(getAllMappings, 1000 * 10); // restarting the function.
+    }
 }
 
+function onRefreshDisabled()
+{
+    window.clearInterval(refreshIntervalId);
+    refreshIntervalId = undefined;
+}
+
+function toggleAutoRefresh(element)
+{
+    var currentState = element && element.innerHTML;
+    element.innerHTML = (currentState.toLocaleLowerCase === "enable") ? "Disable" : "Enable";
+    if (currentState.toLocaleLowerCase() === "enable")
+    {
+        element.innerHTML = "Disable";
+        onRefreshEnabled(element);
+    }
+    else
+    {
+        // disabling it.
+        element.innerHTML = "Enable";
+        onRefreshDisabled(element);
+    }
+    setCookie(cookies.refreshInterval, element.innerHTML);
+}
+
+function getAllMappings() {
+    var table = document.querySelector('table');
+    sendRequest({'requestType': 'GET', 'url': '/mappings'}, function(XMLObj) {
+        var response = XMLObj.responseText;
+
+        if(response) {
+            response = response.split(';');
+
+            for(var i = 0; i < response.length; i++) {
+                var row = document.createElement('tr');
+                var formattedData = getFormattedData(response[i]);
+                row.id = formattedData.machine;
+                if (!machineExists(row.id))
+                {
+                    for (k in formattedData)
+                    {
+                        if (formattedData.hasOwnProperty(k))
+                        {
+                            var data = document.createElement('td');
+                            data.innerHTML = formattedData[k];
+                            row.appendChild(data);
+                        }
+                    }
+                    table.appendChild(row);
+                }
+                else
+                {
+                    updateUsersData(formattedData);
+                }
+            }
+        }
+    });
+}
+
+function updateUsersData(data)
+{
+    document.getElementById(data.machine).children[2].innerHTML = data.users;
+}
+
+function machineExists(id)
+{
+    return document.getElementById(id);
+}
+
+function getFormattedData(response)
+{
+    var id = response.split(':')[0];
+    var obj = {};
+    obj['machine'] = id;
+    obj['owner'] = response.split(':')[1];
+    obj['users'] = response.split(':')[2].split(',').join(', ');
+    return obj;
+}

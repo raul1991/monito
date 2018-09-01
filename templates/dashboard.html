@@ -25,7 +25,7 @@
 	<meta name="msapplication-config" content="/static/images/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 </head>
-<body onload="getAllMappings()">
+<body onload="getAllMappings();restorePreferences()">
 	<section>
 		<header>
 			<div class = "nav">
@@ -40,12 +40,12 @@
 		</header>
 		<div class = "main">
 			<h2>Hello {{ currentUser.name }}! <button onclick="displayInfo(1)">User Info</button></h2>
-			<p>Here are all the available machines along with the active users. The information gets updated every 10 seconds.</p>
-			<table>
+			<p>The information gets updated every 10 seconds. <a id="toggleAutoRefresh" onclick="toggleAutoRefresh(this)" href="#">Enable</a> auto refresh</p>
+			<table class="alternate">
 				<tr>
 					<th>Machine</th>
 					<th>Owner</th>
-					<th>User(s)</th>
+					<th>Active User(s)</th>
 				</tr>
 			</table>
 		</div>
@@ -77,8 +77,13 @@
 			-->	
 		</div>
 	</section>
-
+    <section>
+        <div class='hide' style="position:absolute;z-index:1000;width:400px;height:500px;">
+            <h1>Can't connect to the server right now.</h1>
+        </div>
+    </section>
 	<!-- Scripts -->
 	<script type="text/javascript" src="static/js/main.js"></script>
+	<script type="text/javascript" src="static/js/cookie.js"></script>
 </body>
 </html>

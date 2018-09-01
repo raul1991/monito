@@ -52,6 +52,16 @@ table {
 	border-spacing: 0;
 }
 
+table.alternate:nth-child(2n+1)
+{
+    background-color: "#efefef";
+}
+
+table.alternate:nth-child(2n)
+{
+    background-color: "#fff";
+}
+
 * {
 	box-sizing: border-box;
 }
