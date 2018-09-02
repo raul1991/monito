@@ -25,7 +25,7 @@
 	<meta name="msapplication-config" content="/static/images/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 </head>
-<body onload="getAllMappings();restorePreferences()">
+<body onload="monito.init();">
 	<section>
 		<header>
 			<div class = "nav">
@@ -40,7 +40,7 @@
 		</header>
 		<div class = "main">
 			<h2>Hello {{ currentUser.name }}! <button onclick="displayInfo(1)">User Info</button></h2>
-			<p>The information gets updated every 10 seconds. <a id="toggleAutoRefresh" onclick="toggleAutoRefresh(this)" href="#">Enable</a> auto refresh</p>
+			<p>The information gets updated every 10 seconds. <a id="toggleAutoRefresh" onclick="monito.refresh.update(this.innerHTML)" href="#">Enable</a> auto refresh</p>
 			<table class="alternate">
 				<tr>
 					<th>Machine</th>
@@ -78,7 +78,7 @@
 		</div>
 	</section>
 	<!-- Scripts -->
-	<script type="text/javascript" src="static/js/main.js"></script>
 	<script type="text/javascript" src="static/js/cookie.js"></script>
+	<script type="text/javascript" src="static/js/main.js"></script>
 </body>
 </html>
