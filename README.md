@@ -1,6 +1,6 @@
 # Monito #
 
-It monitors the servers that you provide it using a config file and reports the users that are currently logged in it.
+It monitors the servers on a network using a config file and reports the users that are currently logged in it.
 
 ### What is this repository for? ###
 
