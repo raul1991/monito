@@ -23,7 +23,7 @@ This repo is for Monito related development and issues.
 	* Run the app
 		python app.py
 	* Open the browser
-		http://<host-name>:5000
+		http://localhost:5000
 	* Create a csv file (without headers) with hostnames and team-names separated by comma on each line.
 	* Start the script
 		./fetch_machines.sh -f /path/to/machinefile -k /path/to/ssh-key/file [-m <false/true>]
