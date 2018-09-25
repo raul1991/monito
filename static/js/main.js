@@ -135,6 +135,7 @@ var monito = (function (cookiesModule) {
         obj['machine'] = id;
         obj['owner'] = response.split(':')[1];
         obj['users'] = response.split(':')[2].split(',').join(', ');
+        obj['notes'] = response.split(':')[3];
         return obj;
     }
 

@@ -34,10 +34,29 @@ class Machine(db.Model):
     IP = db.Column(db.String(15), unique=True)
     vdaIPs = db.Column(db.String(200))
     owner = db.Column(db.String(10))
+    notes = db.Column(db.String(200))
 
     def __repr__(self):
         return (
-        "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(self.owner))
+        "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(self.owner)
+        + " Notes: {}>".format(self.notes))
+
+@app.route('/machines/<ip>', methods=["PUT"])
+def update_machine_info(ip):
+    if request.form:
+        notes = request.form.get('notes')
+        if notes:
+            machine = Machine.query.filter_by(IP=ip).first()
+            if machine:
+                machine.notes = notes
+                db.session.commit()
+                return machine.IP + 'has notes = ' + machine.notes
+            else:
+                return "Data not updated"
+        else:
+            return "Missing parameters"
+    else:
+           return "Missing parameters"
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -51,6 +70,7 @@ def login():
         for user in users:
             if user.username == userName:
                 session['user_name'] = user.username
+                session['user_id'] = user.id;
                 return redirect('/dashboard')
 
         return render_template('login.html', SERVER_ERROR='Oops! Incorrect username.')
@@ -140,7 +160,7 @@ def mappings():
             else:
                 vdaNameMap += IP.lower() + ','
 
-        machinesStr += machine.IP + ':' + machine.owner + ':' + vdaNameMap[:-1] + ';'
+        machinesStr += machine.IP + ':' + machine.owner + ':' + vdaNameMap[:-1] + ':' + machine.notes + ';'
 
     return machinesStr[:-1]
 
@@ -162,6 +182,9 @@ def isUserLoggedIn():
     except:
         return False
 
+@app.context_processor
+def inject_basic_information():
+    return dict(author="rahul.bawa@ericsson.com")
 
 if __name__ == "__main__":
     db.create_all()
