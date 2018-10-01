@@ -184,7 +184,7 @@ def isUserLoggedIn():
 
 @app.context_processor
 def inject_basic_information():
-    return dict(author="rahul.bawa@ericsson.com")
+    return dict(author="supremeanitabawa@gmail.com")
 
 if __name__ == "__main__":
     db.create_all()
