@@ -1,5 +1,6 @@
 //Responsive menu
 var monito = (function (cookiesModule) {
+    var machines = []; // to keep track of all the machines.
     var display = false;
     var autoRefreshElRef = document.getElementById('toggleAutoRefresh');
     var refreshIntervalId; // used to store the refresh interval id in order to clear it later on.
@@ -57,6 +58,14 @@ var monito = (function (cookiesModule) {
         }
     }
 
+    function initNotesDialog()
+    {
+        var machineDropdown = $('#machines');
+        $.each(machines, function(key, value) {
+            machineDropdown.append($('<option></option>').attr('value', value['machine']).text(value['machine']));
+        });
+    }
+
     //Display User information on dashboard
 
     function displayInfo(option) {
@@ -86,9 +95,14 @@ var monito = (function (cookiesModule) {
                 action(this);
             }
         }
-
         xmlRequest.open(config.requestType, config.url, true); // async
-        xmlRequest.send();
+        if (config.data) {
+            xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlRequest.send("data="+ config.data);
+        }
+        else {
+            xmlRequest.send();
+        }
     }
 
     function getAllMappings() {
@@ -104,6 +118,7 @@ var monito = (function (cookiesModule) {
                     var formattedData = getFormattedData(response[i]);
                     row.id = formattedData.machine;
                     if (!machineExists(row.id)) {
+                        machines.push(formattedData);
                         for (k in formattedData) {
                             if (formattedData.hasOwnProperty(k)) {
                                 var data = document.createElement('td');
@@ -144,8 +159,19 @@ var monito = (function (cookiesModule) {
         restorePreferences();
     }
 
+    function saveNote() {
+        var note = $('#notes-text').val();
+        var machine = $('#machines').val();
+        console.log("Sending : " + note + '&' + machine);
+        sendRequest({requestType: 'PUT', url: '/machines/'+ machine, data: note}, function(response) {
+            console.log(response.responseText);
+        });
+    }
     return {
         init: init,
-        refresh: autoRefresh
+        refresh: autoRefresh,
+        initNotesDialog: initNotesDialog,
+        saveNote: saveNote,
+        displayInfo: displayInfo
     }
 })(_cookies);

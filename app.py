@@ -44,11 +44,11 @@ class Machine(db.Model):
 @app.route('/machines/<ip>', methods=["PUT"])
 def update_machine_info(ip):
     if request.form:
-        notes = request.form.get('notes')
+        notes = request.form.get('data')
         if notes:
             machine = Machine.query.filter_by(IP=ip).first()
             if machine:
-                machine.notes = notes
+                machine.notes = '@'+ session['user_name'] + '-' + notes
                 db.session.commit()
                 return machine.IP + 'has notes = ' + machine.notes
             else:
