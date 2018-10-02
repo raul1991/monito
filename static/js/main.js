@@ -87,12 +87,15 @@ var monito = (function (cookiesModule) {
 
     //AJAX
 
-    function sendRequest(config, action) {
+    function sendRequest(config, action, error) {
         var xmlRequest = new XMLHttpRequest();
 
         xmlRequest.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 action(this);
+            }
+            else {
+                error(this);
             }
         }
         xmlRequest.open(config.requestType, config.url, true); // async
@@ -133,6 +136,8 @@ var monito = (function (cookiesModule) {
                     }
                 }
             }
+        }, function(error) {
+            console.log(error.responseText);
         });
     }
 
@@ -160,11 +165,18 @@ var monito = (function (cookiesModule) {
     }
 
     function saveNote() {
+        var modal = $('#notesModal');
+        var form = document.getElementById('notesForm');
         var note = $('#notes-text').val();
         var machine = $('#machines').val();
         console.log("Sending : " + note + '&' + machine);
         sendRequest({requestType: 'PUT', url: '/machines/'+ machine, data: note}, function(response) {
             console.log(response.responseText);
+            modal.modal('hide');
+            form.reset();
+
+        }, function(error) {
+            // do error handling here.
         });
     }
     return {

@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask import abort
 
 # Getting absolute path for directory, __file__ = module's name (app.py)
 projectDir = os.path.dirname(os.path.abspath(__file__))
@@ -52,11 +53,11 @@ def update_machine_info(ip):
                 db.session.commit()
                 return machine.IP + 'has notes = ' + machine.notes
             else:
-                return "Data not updated"
+                return abort(404, "Machine " + machine.IP + " not found")
         else:
-            return "Missing parameters"
+            return abort(400, "Missing parameters")
     else:
-           return "Missing parameters"
+           return abort(400, "Missing parameters")
 
 
 @app.route('/', methods=["GET", "POST"])
