@@ -1,5 +1,5 @@
 //Responsive menu
-var monito = (function (cookiesModule) {
+var monito = (function (cookiesModule, requests, notes) {
     var machines = []; // to keep track of all the machines.
     var display = false;
     var autoRefreshElRef = document.getElementById('toggleAutoRefresh');
@@ -85,29 +85,6 @@ var monito = (function (cookiesModule) {
     // 	updateMenu.classList.toggle('displayUpdateMenu');
     // }
 
-    //AJAX
-
-    function sendRequest(config, action, error) {
-        var xmlRequest = new XMLHttpRequest();
-
-        xmlRequest.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                action(this);
-            }
-            else {
-                error(this);
-            }
-        }
-        xmlRequest.open(config.requestType, config.url, true); // async
-        if (config.data) {
-            xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xmlRequest.send("data="+ encodeURIComponent(config.data));
-        }
-        else {
-            xmlRequest.send();
-        }
-    }
-
     function getAuthor(data)
     {
         if (data.indexOf('-') != -1) {
@@ -122,7 +99,7 @@ var monito = (function (cookiesModule) {
     function getAllMappings() {
         var table = document.querySelector('table');
         var columns = ['machine', 'owner', 'users', 'notes']; // change the sequences to change the order of display.
-        sendRequest({'requestType': 'GET', 'url': '/mappings'}, function (XMLObj) {
+        requests.sendRequest({'requestType': 'GET', 'url': '/mappings'}, function (XMLObj) {
             var response = XMLObj.responseText;
 
             if (response) {
@@ -173,20 +150,9 @@ var monito = (function (cookiesModule) {
     }
 
     function saveNote() {
-        var modal = $('#notesModal');
-        var form = document.getElementById('notesForm');
-        var note = $('#notes-text').val();
-        var machine = $('#machines').val();
-        console.log("Sending : " + note + '&' + machine);
-        sendRequest({requestType: 'PUT', url: '/machines/'+ machine, data: note}, function(response) {
-            console.log(response.responseText);
-            modal.modal('hide');
-            form.reset();
-
-        }, function(error) {
-            // do error handling here.
-        });
+        notes.save()
     }
+
     return {
         init: init,
         refresh: autoRefresh,
@@ -194,4 +160,4 @@ var monito = (function (cookiesModule) {
         saveNote: saveNote,
         displayInfo: displayInfo
     }
-})(_cookies);
+})(_cookies, _requests, _notes);
