@@ -101,31 +101,49 @@ var monito = (function (cookiesModule) {
         xmlRequest.open(config.requestType, config.url, true); // async
         if (config.data) {
             xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xmlRequest.send("data="+ config.data);
+            xmlRequest.send("data="+ encodeURIComponent(config.data));
         }
         else {
             xmlRequest.send();
         }
     }
 
+    function getAuthor(data)
+    {
+        if (data.indexOf('-') != -1) {
+            var tokens = data.split('-');
+            return {author: tokens[0] + ' -', body: tokens[1]};
+        }
+        else {
+            return {author: '@anonymous - ', body: data};
+        }
+    }
+
     function getAllMappings() {
         var table = document.querySelector('table');
+        var columns = ['machine', 'owner', 'users', 'notes']; // change the sequences to change the order of display.
         sendRequest({'requestType': 'GET', 'url': '/mappings'}, function (XMLObj) {
             var response = XMLObj.responseText;
 
             if (response) {
-                response = response.split(';');
-
-                for (var i = 0; i < response.length; i++) {
+                var jsonResponse = JSON.parse(response);
+                for (var i = 0; i < jsonResponse.length; i++) {
                     var row = document.createElement('tr');
-                    var formattedData = getFormattedData(response[i]);
+                    var formattedData = jsonResponse[i];
                     row.id = formattedData.machine;
                     if (!machineExists(row.id)) {
                         machines.push(formattedData);
-                        for (k in formattedData) {
-                            if (formattedData.hasOwnProperty(k)) {
+                        for (var k in columns) {
+                            if (columns.hasOwnProperty(k)) {
                                 var data = document.createElement('td');
-                                data.innerHTML = formattedData[k];
+                                if (columns[k] === 'notes')
+                                {
+                                    var notes = getAuthor(formattedData[columns[k]]);
+                                    data.innerHTML = '<span style="color: blue">' + notes['author'] + '</span> ' + notes['body'];
+                                }
+                                else {
+                                    data.innerHTML = formattedData[columns[k]];
+                                }
                                 row.appendChild(data);
                             }
                         }
@@ -137,7 +155,7 @@ var monito = (function (cookiesModule) {
                 }
             }
         }, function(error) {
-            console.log(error.responseText);
+            console.log(error);
         });
     }
 
@@ -147,16 +165,6 @@ var monito = (function (cookiesModule) {
 
     function machineExists(id) {
         return document.getElementById(id);
-    }
-
-    function getFormattedData(response) {
-        var id = response.split(':')[0];
-        var obj = {};
-        obj['machine'] = id;
-        obj['owner'] = response.split(':')[1];
-        obj['users'] = response.split(':')[2].split(',').join(', ');
-        obj['notes'] = response.split(':')[3];
-        return obj;
     }
 
     function init() {

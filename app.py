@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask import abort
+from flask import json
 
 # Getting absolute path for directory, __file__ = module's name (app.py)
 projectDir = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +43,7 @@ class Machine(db.Model):
         "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(self.owner)
         + " Notes: {}>".format(self.notes))
 
+
 @app.route('/machines/<ip>', methods=["PUT"])
 def update_machine_info(ip):
     if request.form:
@@ -49,7 +51,7 @@ def update_machine_info(ip):
         if notes:
             machine = Machine.query.filter_by(IP=ip).first()
             if machine:
-                machine.notes = '@'+ session['user_name'] + '-' + notes
+                machine.notes = '@'+ session['name'] + '-' + notes
                 db.session.commit()
                 return machine.IP + 'has notes = ' + machine.notes
             else:
@@ -116,9 +118,9 @@ def about():
 def dashboard():
     if isUserLoggedIn():
         username = session['user_name']
-        currentUser = User.query.filter_by(username=username).first()
-
-        return render_template('dashboard.html', currentUser=currentUser)
+        curr_user = User.query.filter_by(username=username).first()
+        session['name'] = curr_user.name
+        return render_template('dashboard.html', currentUser=curr_user)
     else:
         return redirect('/')
 
@@ -144,13 +146,11 @@ def mapping():
 @app.route('/mappings')
 def mappings():
     machines = Machine.query.all()
-    users = User.query.all()
-    machinesStr = ''
-
+    response = []
     for machine in machines:
         vdaIPs = machine.vdaIPs.split(',')
         vdaNameMap = ''
-
+        machine_obj = {}
         for IP in vdaIPs:
             userByVDA = User.query.filter_by(vdaIP=IP).first()
             userByHost = User.query.filter(User.hostname.ilike(IP.split(".")[0] + "%")).first()
@@ -160,10 +160,15 @@ def mappings():
                 vdaNameMap += userByHost.name + ','
             else:
                 vdaNameMap += IP.lower() + ','
+            machine_obj = {
+                'machine': machine.IP,
+                'owner': machine.owner,
+                'users': vdaNameMap[:-1],
+                'notes': machine.notes
+            }
+        response.append(machine_obj)
 
-        machinesStr += machine.IP + ':' + machine.owner + ':' + vdaNameMap[:-1] + ':' + machine.notes + ';'
-
-    return machinesStr[:-1]
+    return json.dumps(response)
 
 # @app.route('/update', methods = ["POST"])
 # def update():
