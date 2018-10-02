@@ -7,10 +7,10 @@ var _requests = (function() {
             if (this.readyState === 4 && this.status === 200) {
                 action(this);
             }
-            else {
+            else if (this.readyState === 4 && this.status !== 200) {
                 error(this);
             }
-        }
+        };
         xmlRequest.open(config.requestType, config.url, true); // async
         if (config.data) {
             xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

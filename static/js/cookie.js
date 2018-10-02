@@ -14,10 +14,7 @@ var _cookies = (function(){
         }
         return "";
     });
-    var find = (function (key) {
-        return getCookie(key) || "";
-    });
-    var update = (function (key, value) {
+    var save = (function (key, value) {
         var d = new Date();
         d.setTime(d.getTime() + (365*24*60*60*1000));
         var expires = "expires=" + d.toGMTString();
@@ -25,7 +22,6 @@ var _cookies = (function(){
     });
     return {
         get : get,
-        find : find,
-        update : update
+        save : save
     }
 })();
