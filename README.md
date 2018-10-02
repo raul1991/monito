@@ -9,6 +9,8 @@ This repo is for Monito related development and issues.
 ### How do I get set up? ###
 
 * Clone the project
+* Pre-requisites
+    - `pip` or `easy_install`
 * Dependencies
 	* sqlite3
 	* python3
@@ -24,10 +26,11 @@ This repo is for Monito related development and issues.
 		- `python app.py`
 	* Open the browser
 		- `http://localhost:5000`
-	* Create a csv file (without headers) with hostnames and team-names separated by comma on each line.
+	* Create a csv file (without headers) with the following format
+	    - hostname,owner name,username-to-use-to-login
 	* Start the script
-		- `./fetch_machines.sh -f /path/to/machinefile -k /path/to/ssh-key/file [-m <false/true>]`
+		- `./monito.sh -f /path/to/machinefile -k /path/to/ssh-key/file [-m <false/true>]`
 	* Use `-h` for help menu
 	* For simplicity, keep the machine file in the same directory as your project and save it .machines file.
 * Adding machines
-	* Restart the script in order to load more machines
+	* Append to machines file and restart the script in order to load them.
