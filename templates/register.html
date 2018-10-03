@@ -2,50 +2,50 @@
 {% block title %}Register with Monito.{% endblock %}
 
 {% block body %}
-	<header>
-		<div>
-			<div class = "navigation">
-				<div class = "menu" onclick = "monito.displayMenu()">
-					<div>
-						<div class = "bar"></div>
-						<div class = "bar"></div>
-						<div class = "bar"></div>
-					</div>
-					<span>MENU</span>
-				</div>
-				<nav>
-					<a href = "/about">ABOUT</a>
-					<a href = "/">LOGIN</a>
-					<a href = "/register">REGISTER</a>
-				</nav>
-			</div>
-		</div>
-	</header>
-	<section>
-		<div class = "loginBox">
-			<div class = "logo">
-				<img src="static/images/Monito-1-light.png">
-			</div>
-			<form action = "/register" method = "POST">
-				<div>
-					<label for = "name">NAME</label>
-	    			<input type = "text" id = "name" name = "user_name" placeholder = "full name" pattern="^[a-zA-Z ]+$" required>
-				</div>
-				<div>
-					<label for = "username">USERNAME</label>
-	    			<input type = "text" id = "username" name = "username" placeholder = "signum" pattern="^[a-zA-Z]{5,15}$" required>
-				</div>
-				<div>
-					<label for = "vda-ip">VDA-IP</label>
-	    			<input type = "text" id = "vda-ip" name = "user_vda-ip" placeholder = "xxx.xxx.xx.x" pattern = "^[0-9.]+$" required>
-				</div>
-				<div>
-					<label for = "hostname">HOSTNAME</label>
-	    			<input type = "text" id = "hostname" name = "user_hostname" placeholder = "Run hostname on cmd" required>
-				</div>
-				<label>{{ SERVER_ERROR }}</label>
-				<button type="submit">Register</button>
-			</form>
-		</div>
-	</section>
+    <header>
+        <div>
+            <div class = "navigation">
+                <div class = "menu" onclick = "monito.displayMenu()">
+                    <div>
+                        <div class = "bar"></div>
+                        <div class = "bar"></div>
+                        <div class = "bar"></div>
+                    </div>
+                    <span>MENU</span>
+                </div>
+                <nav>
+                    <a href = "/about">ABOUT</a>
+                    <a href = "/">LOGIN</a>
+                    <a href = "/register">REGISTER</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class = "loginBox">
+            <div class = "logo">
+                <img src="static/images/Monito-1-light.png">
+            </div>
+            <form action = "/register" method = "POST">
+                <div>
+                    <label for = "name">NAME</label>
+                    <input type = "text" id = "name" name = "user_name" placeholder = "full name" pattern="^[a-zA-Z ]+$" required>
+                </div>
+                <div>
+                    <label for = "username">USERNAME</label>
+                    <input type = "text" id = "username" name = "username" placeholder = "signum" pattern="^[a-zA-Z]{5,15}$" required>
+                </div>
+                <div>
+                    <label for = "vda-ip">VDA-IP</label>
+                    <input type = "text" id = "vda-ip" name = "user_vda-ip" placeholder = "xxx.xxx.xx.x" pattern = "^[0-9.]+$" required>
+                </div>
+                <div>
+                    <label for = "hostname">HOSTNAME</label>
+                    <input type = "text" id = "hostname" name = "user_hostname" placeholder = "Run hostname on cmd" required>
+                </div>
+                <label>{{ SERVER_ERROR }}</label>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </section>
 {% endblock %}
