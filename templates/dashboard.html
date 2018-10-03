@@ -1,137 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dashboard</title>
-
-    <!-- Stylesheet -->
+{% extends "_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="static/css/dashboard.css">
     <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css.map">
+{% endblock %}
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+{% block body_attrs %} onload="monito.init();" {% endblock %}
 
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/Monito.png">
-    <link rel="manifest" href="/static/images/site.webmanifest">
-    <link rel="mask-icon" href="/static/images/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="/static/images/Monito.png">
-    <meta name="apple-mobile-web-app-title" content="Monito.">
-    <meta name="application-name" content="Monito.">
-    <meta name="msapplication-TileColor" content="#00aba9">
-    <meta name="msapplication-config" content="/static/images/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-</head>
-<body onload="monito.init();">
-<!-- modal for notes -->
-<div class="modal fade" id="notesModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add note</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="notesForm">
-                    <div class="form-group">
-                        <label for="machines" class="col-form-label">Machine name</label>
-                        <select required class="custom-select form-control" id="machines"></select>
-                    </div>
-                    <div class="form-group">
-                        <label for="notes-text" class="col-form-label">Notes</label>
-                        <textarea maxlength="30" required class="form-control" id="notes-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="monito.saveNote()">Save changes</button>
+{% block body %}
+    <div class="modal fade" id="notesModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add note</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="notesForm">
+                        <div class="form-group">
+                            <label for="machines" class="col-form-label">Machine name</label>
+                            <select required class="custom-select form-control" id="machines"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes-text" class="col-form-label">Notes</label>
+                            <textarea maxlength="30" required class="form-control" id="notes-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="monito.saveNote()">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- modal for notes ends here -->
-<section>
-    <header>
-        <div class="nav">
-            <a href="/dashboard" class="logo">
-                <img src="/static/images/Monito-1-dark.png">
-                <a>
-                    <div>
-                        <a href="mailto:{{author}}?Subject=Monito%20Feedback">CONTACT</a>
-                        <a href="/">LOGOUT</a>
-                    </div>
-        </div>
-    </header>
-    <div class="main">
-        <h2>Hello {{ currentUser.name }}!
-            <button onclick="monito.displayInfo(1)">User Info</button>
-        </h2>
-        <p>The information gets updated every 10 seconds.
-            <a id="toggleAutoRefresh" onclick="monito.refresh.update(this.innerHTML)" href="#">Enable</a> auto refresh
-        </p>
-        <table class="table table-striped" id="monitoTable">
-            <thead>
-                <tr>
-                    <th style="text-align:center">Machine</th>
-                    <th style="text-align:center">Owner</th>
-                    <th style="text-align:center">Active User(s)</th>
-                    <th style="text-align:center">
-                        Notes<a title="Click to add note" href="#" data-toggle="modal" data-target="#notesModal" style="color:white" onclick="monito.initNotesDialog()"> (+)</a>
-                    </th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-    <div class="overlay">
-        <div class="userInfo">
-            <!-- <a href="#" onclick="displayInfo(2)">Close</a> -->
-            <div>
-                <h2>Your Information</h2>
-                <div class="field name">Name: <span>{{ currentUser.name }}</span></div>
-                <div class="field">Username: <span>{{ currentUser.username }}</span></div>
-                <div class="field">VDA-IP: <span>{{ currentUser.vdaIP }}</span></div>
-                <div class="field">Hostname: <span>{{ currentUser.hostname }}</span></div>
-                <!-- <button onclick = "updateInfoMenu()">Update Info</button> -->
-                <button onclick="monito.displayInfo(2)">Close</button>
+    <!-- modal for notes ends here -->
+    <section>
+        <header>
+            <div class="nav">
+                <a href="/dashboard" class="logo">
+                    <img src="/static/images/Monito-1-dark.png">
+                    <a>
+                        <div>
+                            <a href="mailto:{{author}}?Subject=Monito%20Feedback">CONTACT</a>
+                            <a href="/">LOGOUT</a>
+                        </div>
             </div>
+        </header>
+        <div class="main">
+            <h2>Hello {{ currentUser.name }}!
+                <button onclick="monito.displayInfo(1)">User Info</button>
+            </h2>
+            <p>The information gets updated every 10 seconds.
+                <a id="toggleAutoRefresh" onclick="monito.refresh.update(this.innerHTML)" href="#">Enable</a> auto refresh
+            </p>
+            <table class="table table-striped" id="monitoTable">
+                <thead>
+                    <tr>
+                        <th style="text-align:center">Machine</th>
+                        <th style="text-align:center">Owner</th>
+                        <th style="text-align:center">Active User(s)</th>
+                        <th style="text-align:center">
+                            Notes<a title="Click to add note" href="#" data-toggle="modal" data-target="#notesModal" style="color:white" onclick="monito.initNotesDialog()"> (+)</a>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
         </div>
-        <!--
-        <div class = "userInfo updateMenu">
-            <a href="#" onclick="updateInfoMenu();displayInfo(2);">Close</a>
-            <div>
-                <h2>Update Information</h2>
-                <div class = "field">Username: <span>{{ currentUser.username }}</span></div>
-                <input type="text" name="user_name" value="{{currentUser.name}}" pattern="^[a-zA-Z]{5,15}$" class = "name">
-                <input type="email" name="user_email" value = {{currentUser.email}}>
-                <input type="text" name="user_vdaIP" value = {{currentUser.vdaIP}} pattern = "^[0-9.]*$">
-                <button onclick="updateInfo()">Submit</button>
+        <div class="overlay">
+            <div class="userInfo">
+                <!-- <a href="#" onclick="displayInfo(2)">Close</a> -->
+                <div>
+                    <h2>Your Information</h2>
+                    <div class="field name">Name: <span>{{ currentUser.name }}</span></div>
+                    <div class="field">Username: <span>{{ currentUser.username }}</span></div>
+                    <div class="field">VDA-IP: <span>{{ currentUser.vdaIP }}</span></div>
+                    <div class="field">Hostname: <span>{{ currentUser.hostname }}</span></div>
+                    <!-- <button onclick = "updateInfoMenu()">Update Info</button> -->
+                    <button onclick="monito.displayInfo(2)">Close</button>
+                </div>
             </div>
+            <!--
+            <div class = "userInfo updateMenu">
+                <a href="#" onclick="updateInfoMenu();displayInfo(2);">Close</a>
+                <div>
+                    <h2>Update Information</h2>
+                    <div class = "field">Username: <span>{{ currentUser.username }}</span></div>
+                    <input type="text" name="user_name" value="{{currentUser.name}}" pattern="^[a-zA-Z]{5,15}$" class = "name">
+                    <input type="email" name="user_email" value = {{currentUser.email}}>
+                    <input type="text" name="user_vdaIP" value = {{currentUser.vdaIP}} pattern = "^[0-9.]*$">
+                    <button onclick="updateInfo()">Submit</button>
+                </div>
+            </div>
+            -->
         </div>
-        -->
-    </div>
-</section>
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-<script type="text/javascript" src="static/js/vendor/bootstrap.bundle.js"></script>
-<script type="text/javascript" src="static/js/vendor/bootstrap.bundle.js.map"></script>
-<script type="text/javascript" src="static/js/gui.js"></script>
-<script type="text/javascript" src="static/js/requests.js"></script>
-<script type="text/javascript" src="static/js/notes.js"></script>
-<script type="text/javascript" src="static/js/cookie.js"></script>
-<script type="text/javascript" src="static/js/preferences.js"></script>
-<script type="text/javascript" src="static/js/main.js"></script>
-</body>
-</html>
+    </section>
+{% endblock %}
