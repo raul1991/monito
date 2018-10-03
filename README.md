@@ -1,4 +1,4 @@
-# Monito #
+# ![Monito](static/images/Monito-1-light.png) #
 
 It monitors the servers on a network using a config file and reports the users that are currently logged in it.
 
