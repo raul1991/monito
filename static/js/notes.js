@@ -12,6 +12,7 @@ var _notes = (function(requests) {
             console.log(response.responseText);
             modal.modal('hide');
             form.reset();
+            window.location = "/dashboard";
 
         }, function(error) {
             // do error handling here.
