@@ -1,74 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "_base.html" %}
+{% block title %}About Monito.{% endblock %}
+{% block stylesheets %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="static/css/about.css">
+{% endblock %}
 
-	<title>About Monito.</title>
-
-	<!-- Stylesheet -->
-	<link rel="stylesheet" type="text/css" href="static/css/main.css">
-	<link rel="stylesheet" type="text/css" href="static/css/about.css">
-
-	<!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400" rel="stylesheet">
-
-	<!-- Favicon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/static/images/Monito.png">
-	<link rel="manifest" href="/static/images/site.webmanifest">
-	<link rel="mask-icon" href="/static/images/safari-pinned-tab.svg" color="#5bbad5">
-	<link rel="shortcut icon" href="/static/images/Monito.png">
-	<meta name="apple-mobile-web-app-title" content="Monito.">
-	<meta name="application-name" content="Monito.">
-	<meta name="msapplication-TileColor" content="#00aba9">
-	<meta name="msapplication-config" content="/static/images/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-</head>
-<body>
-	<header>
-		<div>
-			<div class = "navigation">
-				<div class = "menu" onclick = "monito.displayMenu()">
-					<div>
-						<div class = "bar"></div>
-						<div class = "bar"></div>
-						<div class = "bar"></div>
-					</div>
-					<span>MENU</span>
-				</div>
-				<nav>
-					<a href = "/about">ABOUT</a>
-					<a href = "/">LOGIN</a>
-					<a href = "/register">REGISTER</a>
-				</nav>
-			</div>
-		</div>
-	</header>
-	<section>
-		<div class = "content">
-			<div class = "logo">
-				<img src="static/images/Monito-1-light.png">
-			</div>
-			<p>
-				Monito is a simple server monitoring solution for machines sharing a network. It displays the current status of the machine and its active users. It was developed by Raman Mangla and Rahul Bawa in 2018.
-			</p>
-		</div>
-	</section>
-
-	<!-- Scripts -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-			crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-			crossorigin="anonymous"></script>
-	<script type="text/javascript" src="static/js/gui.js"></script>
-	<script type="text/javascript" src="static/js/requests.js"></script>
-	<script type="text/javascript" src="static/js/notes.js"></script>
-	<script type="text/javascript" src="static/js/cookie.js"></script>
-	<script type="text/javascript" src="static/js/preferences.js"></script>
-	<script type="text/javascript" src="static/js/main.js"></script>
-</body>
-</html>
+{% block body %}
+    <header>
+        <div>
+            <div class = "navigation">
+                <div class = "menu" onclick = "monito.displayMenu()">
+                    <div>
+                        <div class = "bar"></div>
+                        <div class = "bar"></div>
+                        <div class = "bar"></div>
+                    </div>
+                    <span>MENU</span>
+                </div>
+                <nav>
+                    <a href = "/about">ABOUT</a>
+                    <a href = "/">LOGIN</a>
+                    <a href = "/register">REGISTER</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class = "content">
+            <div class = "logo">
+                <img src="static/images/Monito-1-light.png">
+            </div>
+            <p>
+                Monito is a simple server monitoring solution for machines sharing a network. It displays the current status of the machine and its active users. It was developed by Raman Mangla and Rahul Bawa in 2018.
+            </p>
+        </div>
+    </section>
+{% endblock %}
