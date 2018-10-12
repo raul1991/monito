@@ -89,7 +89,7 @@ var _gui = (function () {
                         table.appendChild(row);
                     }
                     else {
-                        updateUsersData(formattedData);
+                        updateUserData(formattedData);
                     }
                 }
             };
