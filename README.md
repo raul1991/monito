@@ -15,12 +15,12 @@ This repo is for Monito related development and issues.
 	* sqlite3
 	* python3
 	* git-bash or bash
-* Database configuration
-* How to run the app
+
+### How to run the app
 	* Clone the project
 	* Install dependencies
 		- `pip install -r dev-requirements.txt`
-	* Give execute permissions to the script (fetch_machines.sh)
+	* Give execute permissions to the script
 		- `chmod +x ./monito.sh`
 	* Run the app
 		- `python app.py`
@@ -32,5 +32,6 @@ This repo is for Monito related development and issues.
 		- `./monito.sh -f /path/to/machinefile -k /path/to/ssh-key/file [-m <false/true>]`
 	* Use `-h` for help menu
 	* For simplicity, keep the machine file in the same directory as your project and save it .machines file.
-* Adding machines
+
+### Adding machines
 	* Append to machines file and restart the script in order to load them.
