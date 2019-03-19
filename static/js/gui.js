@@ -68,7 +68,7 @@ var _gui = (function () {
             var getElement = function getElement(arr, colName) {
                 switch (colName) {
                     case 'actions':
-                        return '<button '+ arr[colName] + '>' + arr[colName] + '</button>';
+                        return '<button class="btn btn-primary" '+ arr[colName] + '>' + arr[colName] + '</button>';
                         break;
                     case 'notes':
                         var notes = getAuthor(arr[colName]);
