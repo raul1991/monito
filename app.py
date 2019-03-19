@@ -143,6 +143,14 @@ def mapping():
             return 'Added Machine'
 
 
+def getActions(current_users):
+    if current_users == 'free':
+        return "allocate"
+    elif current_users == 'unable-to-connect':
+        return "disabled"
+    return "de-allocate"
+
+
 @app.route('/mappings')
 def mappings():
     machines = Machine.query.all()
@@ -164,7 +172,8 @@ def mappings():
                 'machine': machine.IP,
                 'owner': machine.owner,
                 'users': vdaNameMap[:-1],
-                'notes': machine.notes
+                'notes': machine.notes,
+                'actions': getActions(vdaNameMap[:-1])
             }
         response.append(machine_obj)
 

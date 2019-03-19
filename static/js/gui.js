@@ -40,7 +40,7 @@ var _gui = (function () {
 
     var table = (function () {
         var table = document.getElementById('monitoTable');
-        var columns = ['machine', 'owner', 'users', 'notes']; // change the sequences to change the order of display.
+        var columns = ['machine', 'owner', 'users', 'notes', 'actions']; // change the sequences to change the order of display.
         var machines = [];
         var actions = (function() {
             var getMachines = function() {
@@ -65,24 +65,32 @@ var _gui = (function () {
                 }
             };
 
+            var getElement = function getElement(arr, colName) {
+                switch (colName) {
+                    case 'actions':
+                        return '<button '+ arr[colName] + '>' + arr[colName] + '</button>';
+                        break;
+                    case 'notes':
+                        var notes = getAuthor(arr[colName]);
+                        return '<span style="color: blue">' + notes['author'] + '</span> ' + notes['body'];
+                        break;
+                    default:
+                        return arr[colName];
+                        break;
+                }
+            };
+
             var addRow = function (jsonResponse) {
                 for (var i = 0; i < jsonResponse.length; i++) {
                     var row = document.createElement('tr');
-                    var formattedData = jsonResponse[i];
+                    var formattedData = jsonResponse[i]; // row
                     row.id = formattedData.machine;
                     if (!machineExists(row.id)) {
                         machines.push(formattedData);
                         for (var k in columns) {
                             if (columns.hasOwnProperty(k)) {
-                                var data = document.createElement('td');
-                                if (columns[k] === 'notes')
-                                {
-                                    var notes = getAuthor(formattedData[columns[k]]);
-                                    data.innerHTML = '<span style="color: blue">' + notes['author'] + '</span> ' + notes['body'];
-                                }
-                                else {
-                                    data.innerHTML = formattedData[columns[k]];
-                                }
+                                var data = document.createElement('td'); // column
+                                data.innerHTML = getElement(formattedData, columns[k]);
                                 row.appendChild(data);
                             }
                         }
