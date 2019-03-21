@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+{% block navbar %}
+<!-- nav bar begins -->
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">
+        {% block img_navbar %}<img src="/static/images/Monito-1-dark.png" height="40" width="150">{% endblock %}
+    </h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="btn btn-outline-primary" href="/register">SIGNUP</a>
+        <a class="btn btn-outline-primary" href="/">LOGIN</a>
+    </nav>
+</div>
+<!-- nav bar ends -->
+{% endblock %}
+<div class="container">
+
+    {% block body %}
+    <div class="form-row">
+        <div class="col-12" style="margin: 5% 20% 5%">
+            {% block form_logo %}
+            <div class="col-6 form-group text-center">
+                <img src="/static/images/Monito-1-dark.png" width="250" height="70" alt="Monito">
+            </div>
+            {% endblock %}
+            <div class="col-6 form-group mt-5">
+                {% block form_body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+    <!-- footer -->
+    <footer class="pt-4 my-md-5 pt-md-5 border-top text-center">
+        <div class="row">
+            <div class="col-12 col-md">
+                <img class="mb-2" src="/static/images/favicon-32x32.png" alt="" width="24" height="24">
+                <small class="d-block mb-3 text-muted">© 2017-2019</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>More information</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="p-2 text-dark" href="mailto:{{author}}?Subject=Monito%20Feedback">Contact</a></li>
+                    <li><a class="p-2 text-dark" href="/about">About</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Contribute</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="p-2 text-dark" href="https://github.com/raul1991/monito">github/monito</a></li>
+                    <li><a class="p-2 text-dark" href="https://github.com/raul1991/monito/issues/new">Raise issues</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Appreciate</h5>
+                <ul class="list-unstyled text-small">
+                    <li>
+                        <a class="github-button" href="https://github.com/raul1991/monito" data-size="large"
+                           aria-label="Star raul1991/monito on GitHub">Star</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <!-- footer ends -->
+    {% endblock %}
+</div>
+
+{% block common_scripts %}
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+{% endblock %}
+
+</body>
+<head>
+    {% block common_headers %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Monito.</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="static/css/pricing.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/Monito.png">
+    <link rel="manifest" href="/static/images/site.webmanifest">
+    <link rel="mask-icon" href="/static/images/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/static/images/Monito.png">
+    <meta name="apple-mobile-web-app-title" content="Monito.">
+    <meta name="application-name" content="Monito.">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="msapplication-config" content="/static/images/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    {% endblock %}
+</head>
+</html>

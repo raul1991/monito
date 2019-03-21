@@ -29,17 +29,17 @@ var _gui = (function () {
     })();
 
     var displayInfo = function displayInfo(option) {
-        var overlay = document.querySelector('.overlay');
+        var overlay = document.querySelector('#userInfoForm');
 
         if (option === 1) {
-            overlay.classList.add('displayInfo');
+            overlay.classList.add('d-block');
         } else {
-            overlay.classList.remove('displayInfo');
+            overlay.classList.remove('d-block');
         }
     };
 
     var table = (function () {
-        var table = document.getElementById('monitoTable');
+        var table = document.getElementById('myMachinesView');
         var columns = ['machine', 'owner', 'users', 'notes', 'actions']; // change the sequences to change the order of display.
         var machines = [];
         var actions = (function() {
