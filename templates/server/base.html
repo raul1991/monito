@@ -8,8 +8,8 @@
         {% block img_navbar %}<img src="/static/images/Monito-1-dark.png" height="40" width="150">{% endblock %}
     </h5>
     <nav class="my-2 my-md-0 mr-md-3">
-        <a class="btn btn-outline-primary" href="/register">SIGNUP</a>
-        <a class="btn btn-outline-primary" href="/">LOGIN</a>
+        <a class="btn btn-outline-primary text-uppercase" href="/register">Signup</a>
+        <a class="btn btn-outline-primary text-uppercase" href="/">LOGIN</a>
     </nav>
 </div>
 <!-- nav bar ends -->
@@ -43,15 +43,15 @@
             <div class="col-6 col-md">
                 <h5>More information</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="p-2 text-dark" href="mailto:{{author}}?Subject=Monito%20Feedback">Contact</a></li>
-                    <li><a class="p-2 text-dark" href="/about">About</a></li>
+                    <li><a class="p-2" href="mailto:{{author}}?Subject=Monito%20Feedback">Contact</a></li>
+                    <li><a class="p-2" href="/about">About</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md">
                 <h5>Contribute</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="p-2 text-dark" href="https://github.com/raul1991/monito">github/monito</a></li>
-                    <li><a class="p-2 text-dark" href="https://github.com/raul1991/monito/issues/new">Raise issues</a>
+                    <li><a class="p-2" href="https://github.com/raul1991/monito">github/monito</a></li>
+                    <li><a class="p-2" href="https://github.com/raul1991/monito/issues/new">Raise issues</a>
                     </li>
                 </ul>
             </div>
@@ -60,7 +60,7 @@
                 <ul class="list-unstyled text-small">
                     <li>
                         <a class="github-button" href="https://github.com/raul1991/monito" data-size="large"
-                           aria-label="Star raul1991/monito on GitHub">Star</a>
+                           aria-label="Star raul1991/monito on GitHub">Star me on github</a>
                     </li>
                 </ul>
             </div>
@@ -68,21 +68,15 @@
     </footer>
     <!-- footer ends -->
     {% endblock %}
-</div>
 
+</div>
 {% block common_scripts %}
 <!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
+<script src="/static/js/vendor/jquery-3.3.1.slim.min.js"></script>
+<script src="/static/js/vendor/popper.min.js"></script>
+<script src="/static/js/vendor/bootstrap.min.js"></script>
 <!-- Place this tag in your head or just before your close body tag. -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script async defer src="/static/js/vendor/github_buttons.js"></script>
 {% endblock %}
 
 </body>

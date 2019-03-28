@@ -89,19 +89,23 @@ var _gui = (function () {
             machinePool[machineData.machine] = machineData;
             // build a new row with new data
             machineData.actions = 'Assign to me';
+            machineData.isAllocated = false;
+            machineData.owner = '-'; // hack.
             // append the new row
             machinePoolView.append(table.actions.buildRow(machineData));
         };
 
         var allocateMachine = function (machineData) {
             // remove from pool
-            machinePool[machineData.machine];
+            delete machinePool[machineData.machine];
             // update the gui.
             $('#' + machineData.machine).remove();
             // add to allocated
             allocatedMachines[machineData.machine] = machineData;
             // build a new row with new data
             machineData.actions = 'release';
+            machineData.isAllocated = true;
+            machineData.owner = $('#name').html(); // hack.
             // append the new row
             allocatedMachineView.append(table.actions.buildRow(machineData));
         };
@@ -178,6 +182,16 @@ var _gui = (function () {
             // update the owner
             document.getElementById(data.machine).children[1].innerHTML = data.owner;
             document.getElementById(data.machine).children[2].innerHTML = data.users;
+            // replace the existing entry with the new one.
+            if (allocatedMachines.hasOwnProperty(data.machine)) {
+                // replace it
+                allocatedMachines[data.machine] = data;
+            }
+            else {
+                // replace it
+                machinePool[data.machine] = data;
+            }
+
         };
 
         var isFree = (function (ip) {
@@ -208,7 +222,7 @@ var _gui = (function () {
                     var row = table.actions.buildRow(rowData);
                     view.append(row);
                     // add machine to the corresponding pool
-                    poolType[row.id] = rowData;
+                    poolType[rowData.machine] = rowData;
                 } else {
                     // update the existing row
                     updateExistingRow(rowData);
@@ -230,13 +244,15 @@ var _gui = (function () {
         });
 
         return {
-            init: init
+            init: init,
+            allocations: allocatedMachines,
+            free: machinePool
         }
     })();
 
     return {
         displayInfo: displayInfo,
         navbar: navbar,
-        tabs: tabs
+        tabs: tabs,
     }
 })();
