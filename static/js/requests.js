@@ -1,4 +1,4 @@
-var _requests = (function() {
+var _requests = (function () {
     //AJAX
     function sendRequest(config, action, error) {
         var xmlRequest = new XMLHttpRequest();
@@ -6,8 +6,7 @@ var _requests = (function() {
         xmlRequest.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 action(this);
-            }
-            else if (this.readyState === 4 && this.status !== 200) {
+            } else if (this.readyState === 4 && this.status !== 200) {
                 error(this);
             }
         };
@@ -15,11 +14,11 @@ var _requests = (function() {
         if (config.data) {
             xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xmlRequest.send("data=" + encodeURIComponent(config.data));
-        }
-        else {
+        } else {
             xmlRequest.send();
         }
     }
+
     return {
         sendRequest: sendRequest
     }

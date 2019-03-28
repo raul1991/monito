@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 {% extends 'server/base.html' %}
-{% block form %}
+{% block img_navbar %}<img src="/static/images/favicon-32x32.png">{% endblock %}
+{% block form_body %}
 <form action="/register" method="POST">
     <div class="form-group">
         <label for="name">Name</label>
@@ -27,7 +28,7 @@
                required>
     </div>
     <label>{{ SERVER_ERROR }}</label>
-    <button class="btn btn-outline-primary" type="submit">Register</button>
+    <button class="btn btn-block btn-outline-primary" type="submit">Register</button>
 </form>
 {% endblock %}
 </html>
