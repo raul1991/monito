@@ -33,7 +33,7 @@ function getVisitors
 			ips=("-");
 		else
 			if [[ $ips == "" ]];then
-				ips="Free";
+				ips="-";
 			fi
 		fi
 		echo "Users found on $machine === > $ips"
@@ -47,7 +47,7 @@ function addMachines
        machine=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[1]}')
        team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
        echo "Adding machine ${m} to team $team"
-       addMachine "Free" "$machine" "$team"
+       addMachine "-" "$machine" "$team"
   done
 }
 
