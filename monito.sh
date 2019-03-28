@@ -42,13 +42,13 @@ function getVisitors
 
 function addMachines
 {
-  for m in $(cat $1)
+  while IFS= read -r m
   do
        machine=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[1]}')
        team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
-       echo "Adding machine ${m} to team $team"
+       echo "Adding machine ${machine} to team ${team}"
        addMachine "-" "$machine" "$team"
-  done
+  done<"$1"
 }
 
 function addMachine
@@ -100,16 +100,16 @@ function parseArgs
 
 parseArgs "$@"
 
-[[ $shouldAddMachines == "false" ]] && echo "Machines will not be added" || addMachines "$machines"
+[[ "${shouldAddMachines}" == "false" ]] && echo "Machines will not be added" || addMachines "$machines"
 
 while true;
 do
-	for line in $(cat $machines)
+	while IFS= read -r line
 	do
 		machine=$(echo "$line" | awk '{split($0,arr,",");print arr[1]}')
 		team=$(echo "$line" | awk '{split($0,arr,",");print arr[2]}')
 		user=$(echo "$line" | awk '{split($0,arr,",");print arr[3]}')
 		getVisitors "$machine" "$team" "$user"
 		sleep 5
-	done
+	done<"${machines}"
 done
