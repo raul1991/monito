@@ -70,7 +70,6 @@ function showValidOptions
 function parseArgs
 {
 	local OPTIND
-	echo "Arguments $@"
 	while getopts ":f:k:m:" opt; do
 	case $opt in
 		f ) # machine file
@@ -92,6 +91,7 @@ function parseArgs
 		\?) # error scenario
 			echo "Invalid option -$OPTARG" >&2
 			showValidOptions
+      exit 1
 			;;
 	esac
 	done
