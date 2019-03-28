@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, Response, session, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 from flask import abort
 from flask import json
 
@@ -10,6 +11,9 @@ projectDir = os.path.dirname(os.path.abspath(__file__))
 
 # Path for database in app's directory
 databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
+
+# constants
+UNALLOCATED = '-'
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
@@ -36,12 +40,14 @@ class Machine(db.Model):
     IP = db.Column(db.String(15), unique=True)
     vdaIPs = db.Column(db.String(200))
     owner = db.Column(db.String(10))
-    notes = db.Column(db.String(200))
+    notes = db.Column(db.String(200), default=' ')
+    is_allocated = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         return (
-        "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(self.owner)
-        + " Notes: {}>".format(self.notes))
+                "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(
+            self.owner)
+                + " Notes: {}>".format(self.notes)) + " is_allocated: {}>".format(self.is_allocated)
 
 
 @app.route('/machines/<ip>', methods=["PUT"])
@@ -51,7 +57,7 @@ def update_machine_info(ip):
         if notes:
             machine = Machine.query.filter_by(IP=ip).first()
             if machine:
-                machine.notes = '@'+ session['name'] + '-' + notes
+                machine.notes = '@' + session['name'] + '-' + notes
                 db.session.commit()
                 return machine.IP + 'has notes = ' + machine.notes
             else:
@@ -59,7 +65,7 @@ def update_machine_info(ip):
         else:
             return abort(400, "Missing parameters")
     else:
-           return abort(400, "Missing parameters")
+        return abort(400, "Missing parameters")
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -143,12 +149,43 @@ def mapping():
             return 'Added Machine'
 
 
-def getActions(current_users):
-    if current_users == 'free':
-        return "allocate"
-    elif current_users == 'unable-to-connect':
-        return "disabled"
-    return "de-allocate"
+@app.route('/allocate/<machine_ip>', methods=["PUT"])
+def allocate(machine_ip):
+    if request.form:
+        db_machine = Machine.query.filter_by(IP=machine_ip).filter_by(is_allocated=False).first()
+        if db_machine:
+            # make the currently logged user as the owner of this machine.
+            db_machine.owner = session['name']
+            db_machine.is_allocated = True
+            db.session.commit()
+            return 'Updated'
+        else:
+            print("inside else")
+            # return 404 because machine does not exists.
+            return Response({'msg': "Action could not be completed"}, status=404)
+
+
+@app.route('/release/<machine_ip>', methods=["PUT"])
+def release(machine_ip):
+    if request.form:
+        db_machine = Machine.query.filter_by(IP=machine_ip).filter_by(is_allocated=True).first()
+        if db_machine and db_machine.owner == session['name']:
+            # it's a legit de-allocation.
+            db_machine.owner = UNALLOCATED
+            db_machine.is_allocated = False
+            db_machine.notes = ''
+            db.session.commit()
+            return 'Updated'
+        else:
+            # return 404 because machine does not exists.
+            return Response({'msg': "Action could not be completed"}, status=404,
+                            mimetype={'Content-Type': 'application/json'})
+
+
+def get_actions(owner):
+    if owner == UNALLOCATED:
+        return "Assign to me"
+    return "release"
 
 
 @app.route('/mappings')
@@ -173,11 +210,13 @@ def mappings():
                 'owner': machine.owner,
                 'users': vdaNameMap[:-1],
                 'notes': machine.notes,
-                'actions': getActions(vdaNameMap[:-1])
+                'actions': get_actions(machine.owner),
+                'isAllocated': machine.is_allocated
             }
         response.append(machine_obj)
 
     return json.dumps(response)
+
 
 # @app.route('/update', methods = ["POST"])
 # def update():
@@ -197,9 +236,11 @@ def isUserLoggedIn():
     except:
         return False
 
+
 @app.context_processor
 def inject_basic_information():
     return dict(author="supremeanitabawa@gmail.com")
+
 
 if __name__ == "__main__":
     db.create_all()

@@ -20,8 +20,7 @@ var monito = (function (preferences, requests, notes, gui) {
         var reactToState = (function (state) {
             if (state.toLocaleLowerCase() === 'enable' && !refreshIntervalId) {
                 refreshIntervalId = window.setInterval(getAllMappings, 1000 * 10);
-            }
-            else {
+            } else {
                 window.clearInterval(refreshIntervalId);
                 refreshIntervalId = undefined;
             }
@@ -41,8 +40,7 @@ var monito = (function (preferences, requests, notes, gui) {
         gui.navbar.toggle();
     }
 
-    function initNotesDialog()
-    {
+    function initNotesDialog() {
         gui.table.actions.notes.populateMachines();
     }
 
@@ -65,9 +63,9 @@ var monito = (function (preferences, requests, notes, gui) {
 
             if (response) {
                 var jsonResponse = JSON.parse(response);
-                gui.table.actions.addRow(jsonResponse);
+                gui.tabs.init(jsonResponse);
             }
-        }, function(error) {
+        }, function (error) {
             console.log(error);
         });
     }

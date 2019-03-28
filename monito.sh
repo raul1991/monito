@@ -30,7 +30,7 @@ function getVisitors
 			shopt -u nocasematch
 		done
 		if [[ $isMachineUp -ne 0 ]];then
-			ips=("Unable-To-Connect");
+			ips=("-");
 		else
 			if [[ $ips == "" ]];then
 				ips="Free";

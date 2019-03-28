@@ -29,103 +29,230 @@ var _gui = (function () {
     })();
 
     var displayInfo = function displayInfo(option) {
-        var overlay = document.querySelector('.overlay');
+        var overlay = document.querySelector('#userInfoForm');
 
         if (option === 1) {
-            overlay.classList.add('displayInfo');
+            overlay.classList.add('d-block');
         } else {
-            overlay.classList.remove('displayInfo');
+            overlay.classList.remove('d-block');
         }
     };
 
-    var table = (function () {
-        var table = document.getElementById('monitoTable');
-        var columns = ['machine', 'owner', 'users', 'notes', 'actions']; // change the sequences to change the order of display.
-        var machines = [];
-        var actions = (function() {
-            var getMachines = function() {
-                return machines;
-            };
+    var tabs = (function () {
+        var allocatedMachines = {};
+        var machinePool = {};
+        var allocatedMachineView = $('#myMachinesView');
+        var machinePoolView = $('#allMachinesView');
 
-            var updateUserData = function updateUsersData(data) {
-                document.getElementById(data.machine).children[2].innerHTML = data.users;
-            };
+        var table = (function () {
+            var columns = ['machine', 'owner', 'users', 'notes', 'actions']; // change the sequences to change the order of display.
 
-            var machineExists = function machineExists(id) {
-                return document.getElementById(id);
-            };
-
-            var getAuthor = function getAuthor(data) {
-                if (data.indexOf('-') !== -1) {
-                    var tokens = data.split('-');
-                    return {author: tokens[0] + ' -', body: tokens[1]};
-                }
-                else {
-                    return {author: '@anonymous - ', body: data};
-                }
-            };
-
-            var getElement = function getElement(arr, colName) {
-                switch (colName) {
-                    case 'actions':
-                        return '<button '+ arr[colName] + '>' + arr[colName] + '</button>';
-                        break;
-                    case 'notes':
-                        var notes = getAuthor(arr[colName]);
-                        return '<span style="color: blue">' + notes['author'] + '</span> ' + notes['body'];
-                        break;
-                    default:
-                        return arr[colName];
-                        break;
-                }
-            };
-
-            var addRow = function (jsonResponse) {
-                for (var i = 0; i < jsonResponse.length; i++) {
-                    var row = document.createElement('tr');
-                    var formattedData = jsonResponse[i]; // row
-                    row.id = formattedData.machine;
-                    if (!machineExists(row.id)) {
-                        machines.push(formattedData);
-                        for (var k in columns) {
-                            if (columns.hasOwnProperty(k)) {
-                                var data = document.createElement('td'); // column
-                                data.innerHTML = getElement(formattedData, columns[k]);
-                                row.appendChild(data);
-                            }
+            var actions = (function () {
+                var build = function (rowData) {
+                    var row = $('<tr></tr>').attr('id', rowData.machine);
+                    for (var k in columns) {
+                        if (columns.hasOwnProperty(k)) {
+                            var col = $('<td></td>').html(getElement(rowData, columns[k])); // column
+                            row.append(col);
                         }
-                        table.appendChild(row);
                     }
-                    else {
-                        updateUserData(formattedData);
-                    }
-                }
-            };
-
-            var notes = (function() {
-                var initNotesDialog = function() {
-                    var machineDropdown = $('#machines');
-                    $.each(machines, function(key, value) {
-                        machineDropdown.append($('<option></option>').attr('value', value['machine']).text(value['machine']));
-                    });
+                    return row;
                 };
-               return {
-                  populateMachines: initNotesDialog
-               }
+
+                var notes = (function () {
+                    var initNotesDialog = function () {
+                        var machineDropdown = $('#machines');
+                        $.each(userMachines, function (key, value) {
+                            machineDropdown.append($('<option></option>').attr('value', value['machine']).text(value['machine']));
+                        });
+                    };
+                    return {
+                        populateMachines: initNotesDialog
+                    }
+                })();
+                return {
+                    notes: notes,
+                    buildRow: build
+                }
             })();
             return {
-                notes: notes,
-                addRow: addRow
+                actions: actions
             }
         })();
+
+        var releaseMachine = function (machineData) {
+            // remove from allocated
+            delete allocatedMachines[machineData.machine];
+            // update the gui.
+            $('#' + machineData.machine).remove();
+            // add to pool.
+            machinePool[machineData.machine] = machineData;
+            // build a new row with new data
+            machineData.actions = 'Assign to me';
+            machineData.isAllocated = false;
+            machineData.owner = '-'; // hack.
+            // append the new row
+            machinePoolView.append(table.actions.buildRow(machineData));
+        };
+
+        var allocateMachine = function (machineData) {
+            // remove from pool
+            delete machinePool[machineData.machine];
+            // update the gui.
+            $('#' + machineData.machine).remove();
+            // add to allocated
+            allocatedMachines[machineData.machine] = machineData;
+            // build a new row with new data
+            machineData.actions = 'release';
+            machineData.isAllocated = true;
+            machineData.owner = $('#name').html(); // hack.
+            // append the new row
+            allocatedMachineView.append(table.actions.buildRow(machineData));
+        };
+
+        var getAuthor = function getAuthor(data) {
+            if (data.trim() === '') {
+                return {author: '', body: '-'};
+            } else if (data.indexOf('-') !== -1) {
+                var tokens = data.split('-');
+                return {author: tokens[0] + ' -', body: tokens[1]};
+            } else {
+                return {author: '@anonymous - ', body: data};
+            }
+        };
+
+        /**
+         * A callback that gets called when the allocate/de-allocate button is pressed.
+         * @param rowData
+         */
+        var onClickHandler = function (rowData, endpoint) {
+            _requests.sendRequest({
+                url: '/'+ endpoint + '/'+ rowData.machine,
+                requestType: 'put',
+                data: JSON.stringify(rowData)
+            }, function (response) {
+                // todo: remove the machines from the
+                if (endpoint === 'release') {
+                    // release a machine.
+                    releaseMachine(rowData);
+                }
+                else if (endpoint === 'allocate') {
+                    allocateMachine(rowData);
+                }
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        var getEndpoint = function (actionLabel) {
+            switch (actionLabel) {
+                case "release":
+                    return actionLabel;
+                case "Assign to me":
+                    return "allocate";
+                default:
+                    return "none";
+            }
+        };
+
+        var getElement = function getElement(arr, colName) {
+            switch (colName) {
+                case 'actions':
+                    var classes = "btn btn-primary";
+                    var actionsLabel = arr[colName];
+                    var endpoint = getEndpoint(actionsLabel);
+                    if (endpoint === "none")
+                    {
+                        return $('<button></button>').val(actionsLabel).html(actionsLabel).attr('class', classes);
+                    }
+                    return $('<button></button>').val(endpoint).html(actionsLabel).attr('class', classes).click(function () {
+                        onClickHandler(arr, endpoint);
+                    });
+                case 'notes':
+                    var notes = getAuthor(arr[colName]);
+                    return $('<span></span> ' + notes['body']).css("color", "blue").html(notes['author']);
+                    break;
+                default:
+                    return arr[colName];
+                    break;
+            }
+        };
+
+        var updateExistingRow = function updateUsersData(data) {
+            // update the owner
+            document.getElementById(data.machine).children[1].innerHTML = data.owner;
+            document.getElementById(data.machine).children[2].innerHTML = data.users;
+            // replace the existing entry with the new one.
+            if (allocatedMachines.hasOwnProperty(data.machine)) {
+                // replace it
+                allocatedMachines[data.machine] = data;
+            }
+            else {
+                // replace it
+                machinePool[data.machine] = data;
+            }
+
+        };
+
+        var isFree = (function (ip) {
+            return machinePool.hasOwnProperty(ip);
+        });
+
+        var isAllocated = (function (ip) {
+            return allocatedMachines.hasOwnProperty(ip);
+        });
+
+        var machineExists = (function (ip) {
+            return isFree(ip) || isAllocated(ip);
+        });
+
+        /**
+         * Renders the view with the data provided.
+         *
+         * @param data - an object like {"free": [{}, {}]}
+         * @param view - a ui element
+         * @param poolType - either machinePool or freeMachines object
+         *
+         */
+        var renderTable = (function (data, view, poolType) {
+            // for each tab
+            $.each(data, function (key, rowData) {
+                if (!machineExists(rowData.machine)) {
+                    // for each row update the view.
+                    var row = table.actions.buildRow(rowData);
+                    view.append(row);
+                    // add machine to the corresponding pool
+                    poolType[rowData.machine] = rowData;
+                } else {
+                    // update the existing row
+                    updateExistingRow(rowData);
+                }
+            });
+        });
+
+        /**
+         * machines : [{"free": [{}, {}]}, {"allocated": [{}, {}]}]
+         */
+        var init = (function (machines) {
+            // reload the gui.
+            renderTable(machines.filter(function (machine) {
+                return !machine.isAllocated;
+            }), machinePoolView, machinePool);
+            renderTable(machines.filter(function (machine) {
+                return machine.isAllocated;
+            }), allocatedMachineView, allocatedMachines);
+        });
+
         return {
-            actions: actions
+            init: init,
+            allocations: allocatedMachines,
+            free: machinePool
         }
     })();
 
     return {
         displayInfo: displayInfo,
         navbar: navbar,
-        table: table
+        tabs: tabs,
     }
 })();
