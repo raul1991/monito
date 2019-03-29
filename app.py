@@ -38,14 +38,14 @@ class User(db.Model):
 class Machine(db.Model):
     id = db.Column('machineID', db.Integer, primary_key=True)
     IP = db.Column(db.String(15), unique=True)
-    vdaIPs = db.Column(db.String(200))
+    active_users = db.Column(db.String(200))
     owner = db.Column(db.String(10))
     notes = db.Column(db.String(200), default=' ')
     is_allocated = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         return (
-                "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.vdaIPs) + " Owner: {}>".format(
+                "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.active_users) + " Owner: {}>".format(
             self.owner)
                 + " Notes: {}>".format(self.notes)) + " is_allocated: {}>".format(self.is_allocated)
 
@@ -134,13 +134,13 @@ def dashboard():
 @app.route('/mapping', methods=["POST"])
 def mapping():
     if request.form:
-        machine = Machine(vdaIPs=request.form.get('vda_ips'),
+        machine = Machine(active_users=request.form.get('vda_ips'),
                           IP=request.form.get('machine_ip'),
                           owner=request.form.get('owner').lower())
         dbMachine = Machine.query.filter_by(IP=machine.IP).first()
 
         if dbMachine:
-            dbMachine.vdaIPs = machine.vdaIPs
+            dbMachine.active_users = machine.active_users
             db.session.commit()
             return 'Updated Machine'
         else:
@@ -193,22 +193,22 @@ def mappings():
     machines = Machine.query.all()
     response = []
     for machine in machines:
-        vdaIPs = machine.vdaIPs.split(',')
-        vdaNameMap = ''
+        active_user_machine_names = machine.active_users.split(',')
+        active_users = ''
         machine_obj = {}
-        for IP in vdaIPs:
+        for IP in active_user_machine_names:
             userByVDA = User.query.filter_by(vdaIP=IP).first()
             userByHost = User.query.filter(User.hostname.ilike(IP.split(".")[0] + "%")).first()
             if userByVDA:
-                vdaNameMap += userByVDA.name + ','
+                active_users += userByVDA.name + ','
             elif userByHost:
-                vdaNameMap += userByHost.name + ','
+                active_users += userByHost.name + ','
             else:
-                vdaNameMap += IP.lower() + ','
+                active_users += IP.lower() + ','
             machine_obj = {
                 'machine': machine.IP,
                 'owner': machine.owner,
-                'users': vdaNameMap[:-1],
+                'users': active_users[:-1],
                 'notes': machine.notes,
                 'actions': get_actions(machine.owner),
                 'isAllocated': machine.is_allocated
@@ -221,7 +221,7 @@ def mappings():
 # @app.route('/update', methods = ["POST"])
 # def update():
 # 	if request.form:
-# 		machine = Machine(vdaIPs = request.form.get('vda_ips'), 
+# 		machine = Machine(active_users = request.form.get('vda_ips'),
 # 				IP = request.form.get('machine_ip'))
 
 # 		db.session.add(machine)
