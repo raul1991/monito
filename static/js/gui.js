@@ -45,7 +45,7 @@ var _gui = (function () {
         var machinePoolView = $('#allMachinesView');
 
         var table = (function () {
-            var columns = ['machine', 'owner', 'users', 'notes', 'actions']; // change the sequences to change the order of display.
+            var columns = ['machine', 'owner', 'users', 'actions']; // change the sequences to change the order of display.
 
             var actions = (function () {
                 var build = function (rowData) {
@@ -59,19 +59,7 @@ var _gui = (function () {
                     return row;
                 };
 
-                var notes = (function () {
-                    var initNotesDialog = function () {
-                        var machineDropdown = $('#machines');
-                        $.each(userMachines, function (key, value) {
-                            machineDropdown.append($('<option></option>').attr('value', value['machine']).text(value['machine']));
-                        });
-                    };
-                    return {
-                        populateMachines: initNotesDialog
-                    }
-                })();
                 return {
-                    notes: notes,
                     buildRow: build
                 }
             })();
@@ -168,10 +156,7 @@ var _gui = (function () {
                     return $('<button></button>').val(endpoint).html(actionsLabel).attr('class', classes).click(function () {
                         onClickHandler(arr, endpoint);
                     });
-                case 'notes':
-                    var notes = getAuthor(arr[colName]);
-                    return $('<span></span> ' + notes['body']).css("color", "blue").html(notes['author']);
-                    break;
+
                 default:
                     return arr[colName];
                     break;

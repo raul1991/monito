@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, render_template, request, Response, session, redirect
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_
 from flask import abort
 from flask import json
 
@@ -40,32 +39,12 @@ class Machine(db.Model):
     IP = db.Column(db.String(15), unique=True)
     active_users = db.Column(db.String(200))
     owner = db.Column(db.String(10))
-    notes = db.Column(db.String(200), default=' ')
     is_allocated = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         return (
                 "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.active_users) + " Owner: {}>".format(
-            self.owner)
-                + " Notes: {}>".format(self.notes)) + " is_allocated: {}>".format(self.is_allocated)
-
-
-@app.route('/machines/<ip>', methods=["PUT"])
-def update_machine_info(ip):
-    if request.form:
-        notes = request.form.get('data')
-        if notes:
-            machine = Machine.query.filter_by(IP=ip).first()
-            if machine:
-                machine.notes = '@' + session['name'] + '-' + notes
-                db.session.commit()
-                return machine.IP + 'has notes = ' + machine.notes
-            else:
-                return abort(404, "Machine " + machine.IP + " not found")
-        else:
-            return abort(400, "Missing parameters")
-    else:
-        return abort(400, "Missing parameters")
+            self.owner) + " is_allocated: {}>".format(self.is_allocated))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -173,7 +152,6 @@ def release(machine_ip):
             # it's a legit de-allocation.
             db_machine.owner = UNALLOCATED
             db_machine.is_allocated = False
-            db_machine.notes = ''
             db.session.commit()
             return 'Updated'
         else:
@@ -209,7 +187,6 @@ def mappings():
                 'machine': machine.IP,
                 'owner': machine.owner,
                 'users': active_users[:-1],
-                'notes': machine.notes,
                 'actions': get_actions(machine.owner),
                 'isAllocated': machine.is_allocated
             }

@@ -1,5 +1,5 @@
 //Responsive menu
-var monito = (function (preferences, requests, notes, gui) {
+var monito = (function (preferences, requests, gui) {
     var display = false;
     var autoRefreshElRef = document.getElementById('toggleAutoRefresh');
     var refreshIntervalId; // used to store the refresh interval id in order to clear it later on.
@@ -40,10 +40,6 @@ var monito = (function (preferences, requests, notes, gui) {
         gui.navbar.toggle();
     }
 
-    function initNotesDialog() {
-        gui.table.actions.notes.populateMachines();
-    }
-
     //Display User information on dashboard
 
     function displayInfo(option) {
@@ -75,16 +71,10 @@ var monito = (function (preferences, requests, notes, gui) {
         restorePreferences();
     }
 
-    function saveNote() {
-        notes.save()
-    }
-
     return {
         init: init,
         refresh: autoRefresh,
-        initNotesDialog: initNotesDialog,
-        saveNote: saveNote,
         displayInfo: displayInfo,
         displayMenu: displayMenu
     }
-})(_prefs, _requests, _notes, _gui);
+})(_prefs, _requests, _gui);

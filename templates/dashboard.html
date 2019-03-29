@@ -4,37 +4,6 @@
 {% extends 'server/base.html' %}
 
 {% block navbar %}
-<!-- modal for notes -->
-<div class="modal fade" id="notesModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add note</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="notesForm">
-                    <div class="form-group">
-                        <label for="machines" class="col-form-label">Machine name</label>
-                        <select required class="custom-select form-control" id="machines"></select>
-                    </div>
-                    <div class="form-group">
-                        <label for="notes-text" class="col-form-label">Notes</label>
-                        <textarea maxlength="30" required class="form-control" id="notes-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="monito.saveNote()">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- modal for notes ends here -->
-
 <!-- modal for user info -->
 <div class="modal fade" id="userInfoModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -104,10 +73,6 @@
                 <th>Machine</th>
                 <th>Owner</th>
                 <th>Active User(s)</th>
-                <th>
-                    Notes<a title="Click to add note" href="#" data-toggle="modal" data-target="#notesModal"
-                            style="color:white" onclick="monito.initNotesDialog()"> (+)</a>
-                </th>
                 <th style="text-align:center">Actions</th>
             </tr>
             </thead>
@@ -121,10 +86,6 @@
                 <th style="text-align:center">Machine</th>
                 <th style="text-align:center">Owner</th>
                 <th style="text-align:center">Active User(s)</th>
-                <th style="text-align:center">
-                    Notes<a title="Click to add note" href="#" data-toggle="modal" data-target="#notesModal"
-                            style="color:white" onclick="monito.initNotesDialog()"> (+)</a>
-                </th>
                 <th style="text-align:center">Actions</th>
             </tr>
             </thead>
@@ -134,7 +95,6 @@
 <!-- Scripts -->
 <script defer type="text/javascript" src="static/js/gui.js"></script>
 <script defer type="text/javascript" src="static/js/requests.js"></script>
-<script defer type="text/javascript" src="static/js/notes.js"></script>
 <script defer type="text/javascript" src="static/js/cookie.js"></script>
 <script defer type="text/javascript" src="static/js/preferences.js"></script>
 <script defer type="text/javascript" src="static/js/main.js"></script>
