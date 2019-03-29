@@ -53,7 +53,7 @@ def login():
     session.clear()
 
     if request.form:
-        userName = request.form.get('username').lower()
+        userName = request.form.get('username')
 
         for user in users:
             if user.username == userName:
@@ -61,7 +61,7 @@ def login():
                 session['user_id'] = user.id;
                 return redirect('/dashboard')
 
-        return render_template('login.html', SERVER_ERROR='Oops! Incorrect username.')
+        return render_template('login.html', SERVER_ERROR='Oops! username \'{}\' does not exists.'.format(userName))
 
     return render_template('login.html')
 
