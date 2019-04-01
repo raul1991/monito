@@ -64,6 +64,7 @@ var _gui = (function () {
                 }
             })();
             return {
+                cols: columns,
                 actions: actions
             }
         })();
@@ -163,32 +164,8 @@ var _gui = (function () {
             }
         };
 
-        var updateExistingRow = function updateUsersData(data) {
-            // update the owner
-            document.getElementById(data.machine).children[1].innerHTML = data.owner;
-            document.getElementById(data.machine).children[2].innerHTML = data.users;
-            // replace the existing entry with the new one.
-            if (allocatedMachines.hasOwnProperty(data.machine)) {
-                // replace it
-                allocatedMachines[data.machine] = data;
-            }
-            else {
-                // replace it
-                machinePool[data.machine] = data;
-            }
-
-        };
-
-        var isFree = (function (ip) {
-            return machinePool.hasOwnProperty(ip);
-        });
-
-        var isAllocated = (function (ip) {
-            return allocatedMachines.hasOwnProperty(ip);
-        });
-
-        var machineExists = (function (ip) {
-            return isFree(ip) || isAllocated(ip);
+        var isAllocatedToMe = (function (data) {
+            return data.isAllocated && data.owner === $("#name").html();
         });
 
         /**
@@ -202,16 +179,11 @@ var _gui = (function () {
         var renderTable = (function (data, view, poolType) {
             // for each tab
             $.each(data, function (key, rowData) {
-                if (!machineExists(rowData.machine)) {
-                    // for each row update the view.
-                    var row = table.actions.buildRow(rowData);
-                    view.append(row);
-                    // add machine to the corresponding pool
-                    poolType[rowData.machine] = rowData;
-                } else {
-                    // update the existing row
-                    updateExistingRow(rowData);
-                }
+                // for each row update the view.
+                var newRow = table.actions.buildRow(rowData);
+                view.append(newRow);
+                // add machine to the corresponding pool
+                poolType[rowData.machine] = rowData;
             });
         });
 
@@ -219,12 +191,18 @@ var _gui = (function () {
          * machines : [{"free": [{}, {}]}, {"allocated": [{}, {}]}]
          */
         var init = (function (machines) {
+
+            var exemptions = $('.exempted-headers').detach(); // headers of the tables should be preserved.
+            allocatedMachineView.empty().append(exemptions[0]); // delete all child nodes and recreate as per the server response.
+            machinePoolView.empty().append(exemptions[1]);
+
             // reload the gui.
             renderTable(machines.filter(function (machine) {
                 return !machine.isAllocated;
             }), machinePoolView, machinePool);
+
             renderTable(machines.filter(function (machine) {
-                return machine.isAllocated;
+                return isAllocatedToMe(machine);
             }), allocatedMachineView, allocatedMachines);
         });
 
@@ -238,6 +216,6 @@ var _gui = (function () {
     return {
         displayInfo: displayInfo,
         navbar: navbar,
-        tabs: tabs,
+        tabs: tabs
     }
 })();
