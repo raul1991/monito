@@ -42,12 +42,9 @@ function getVisitors
 
 function addMachines
 {
-  while IFS= read -r m
+  while IFS=, read -r machine owner login_name
   do
-       machine=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[1]}')
-       team=$(echo "${m}" | awk '{split($0,tokens,","); print tokens[2]}')
-       echo "Adding machine ${machine} to team ${team}"
-       addMachine "-" "$machine" "$team"
+       addMachine "-" "$machine" "$login_name"
   done<"$1"
 }
 
@@ -104,12 +101,9 @@ parseArgs "$@"
 
 while true;
 do
-	while IFS= read -r line
+	while IFS=, read -r machine owner login_name
 	do
-		machine=$(echo "$line" | awk '{split($0,arr,",");print arr[1]}')
-		team=$(echo "$line" | awk '{split($0,arr,",");print arr[2]}')
-		user=$(echo "$line" | awk '{split($0,arr,",");print arr[3]}')
-		getVisitors "$machine" "$team" "$user"
+		getVisitors "$machine" "$owner" "$login_name"
 		sleep 5
 	done<"${machines}"
 done
