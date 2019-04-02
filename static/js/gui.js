@@ -99,17 +99,6 @@ var _gui = (function () {
             allocatedMachineView.append(table.actions.buildRow(machineData));
         };
 
-        var getAuthor = function getAuthor(data) {
-            if (data.trim() === '') {
-                return {author: '', body: '-'};
-            } else if (data.indexOf('-') !== -1) {
-                var tokens = data.split('-');
-                return {author: tokens[0] + ' -', body: tokens[1]};
-            } else {
-                return {author: '@anonymous - ', body: data};
-            }
-        };
-
         /**
          * A callback that gets called when the allocate/de-allocate button is pressed.
          * @param rowData
