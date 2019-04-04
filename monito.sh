@@ -16,10 +16,13 @@ function getVisitors
 	team="$2"
 	user="$3"
 	echo "Running ${cmd} on ${machine}"
-
-		
-		result=$(ssh -q -i "${key_file}" -o ConnectTimeout=10 -o BatchMode=yes -o StrictHostKeyChecking=no -t ${user}@${machine} ${cmd})
+		ssh ${user}@${machine} -q -i "${key_file}" exit
 		isMachineUp=$?
+	if [[ $isMachineUp -ne 0 ]];then
+		echo "Machine is down"
+		ips='-'
+	else
+		result=$(ssh ${user}@${machine} -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes -t ${cmd})
 		ips=()
 		for visitor in ${result}
 		do
@@ -29,30 +32,28 @@ function getVisitors
 			fi
 			shopt -u nocasematch
 		done
-		if [[ $isMachineUp -ne 0 ]];then
-			ips=("-");
-		else
-			if [[ $ips == "" ]];then
-				ips="-";
-			fi
+		if [[ $ips == "" ]];then
+			ips="-";
 		fi
 		echo "Users found on $machine === > $ips"
-		addMachine $(join_by , "${ips}") "${machine}" "${team}"
+	fi
+	addMachine $(join_by , "${ips}") "${machine}" "${team}"
+
 }
 
 function addMachines
 {
-  while IFS=, read -r machine owner login_name
+  while IFS=, read -u10 machine owner login_name
   do
        addMachine "-" "$machine" "$login_name"
-  done<"$1"
+  done 10<"$1"
 }
 
 function addMachine
 {
 	# first argument - machine name
 	# second argument - team name
-	curl -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null&
+	curl -s -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null&
 }
 
 function showValidOptions
@@ -101,9 +102,8 @@ parseArgs "$@"
 
 while true;
 do
-	while IFS=, read -r machine owner login_name
+	while IFS=, read -u10 machine owner login_name
 	do
 		getVisitors "$machine" "$owner" "$login_name"
-		sleep 5
-	done<"${machines}"
+	done 10<"${machines}"
 done
