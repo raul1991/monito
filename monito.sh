@@ -16,7 +16,7 @@ function getVisitors
 	team="$2"
 	user="$3"
 	echo "Running ${cmd} on ${machine}"
-		ssh ${user}@${machine} -q -i "${key_file}" exit
+		ssh ${user}@${machine} -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes exit
 		isMachineUp=$?
 	if [[ $isMachineUp -ne 0 ]];then
 		echo "Machine is down"
@@ -53,7 +53,7 @@ function addMachine
 {
 	# first argument - machine name
 	# second argument - team name
-	curl -s -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null&
+	curl -s -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
 }
 
 function showValidOptions
