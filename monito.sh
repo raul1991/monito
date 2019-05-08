@@ -10,6 +10,7 @@ shouldAddMachines="true"
 
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
+
 function getVisitors
 {
 	machine="$1"
@@ -37,15 +38,15 @@ function getVisitors
 		fi
 		echo "Users found on $machine === > $ips"
 	fi
-	addMachine $(join_by , "${ips}") "${machine}" "${team}"
+	updateMachine $(join_by , "${ips}") "${machine}" "${team}"
 
 }
 
 function addMachines
 {
-  while IFS=, read -u10 machine owner login_name
+  while IFS=, read -u10 machine owner
   do
-       addMachine "-" "$machine" "$login_name"
+       addMachine "-" "$machine"
   done 10<"$1"
 }
 
@@ -53,7 +54,14 @@ function addMachine
 {
 	# first argument - machine name
 	# second argument - team name
-	curl -s -X POST http://localhost:5000/mapping -F "owner=$3" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
+	curl -s -X POST http://localhost:5000/mapping -F "owner=$1" -F "vda_ips=$1" -F "machine_ip=$2" > /dev/null
+}
+
+function updateMachine
+{
+	# first argument - machine name
+	# second argument - team name
+	curl -s -X POST http://localhost:5000/mapping -F "vda_ips=$1" -F "machine_ip=$2" -F "owner=$3" > /dev/null
 }
 
 function showValidOptions

@@ -1,9 +1,9 @@
 import os
+from subprocess import Popen
 
 from flask import Flask, render_template, request, Response, session, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask import abort
 from flask import json
+from flask_sqlalchemy import SQLAlchemy
 
 # Getting absolute path for directory, __file__ = module's name (app.py)
 projectDir = os.path.dirname(os.path.abspath(__file__))
@@ -19,11 +19,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["PERMANENT_SESSION_LIFETIME"] = 900  # seconds
 db = SQLAlchemy(app)
+cache = {}
 
 
 class User(db.Model):
     id = db.Column('userID', db.Integer, primary_key=True)
     name = db.Column(db.String(30))
+    email = db.Column(db.String(100))
     username = db.Column(db.String(20), unique=True)
     vdaIP = db.Column(db.String(15), unique=True)
     hostname = db.Column(db.String(50), unique=True)
@@ -31,6 +33,7 @@ class User(db.Model):
     def __repr__(self):
         return ("<Name: {}>".format(self.name) +
                 "<Username: {}>".format(self.username) +
+                "<Email: {}>".format(self.email) +
                 "<VDA-IP: {}>".format(self.vdaIP))
 
 
@@ -58,7 +61,7 @@ def login():
         for user in users:
             if user.username == userName:
                 session['user_name'] = user.username
-                session['user_id'] = user.id;
+                session['user_id'] = user.id
                 return redirect('/dashboard')
 
         return render_template('login.html', SERVER_ERROR='Oops! username \'{}\' does not exists.'.format(userName))
@@ -75,11 +78,12 @@ def register():
 
         user = User(name=request.form.get('user_name').strip().lower(),
                     username=request.form.get('username').strip().lower(),
+                    email=request.form.get('email').strip().lower(),
                     vdaIP=request.form.get('user_vda-ip').strip(),
                     hostname=request.form.get('user_hostname').strip().lower())
 
         for elem in users:
-            if elem.username == user.username or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
+            if elem.email == user.email or elem.username == user.username or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
                 userExists = True
                 break
 
@@ -110,19 +114,65 @@ def dashboard():
         return redirect('/')
 
 
+def exists_in_cache(machine):
+    return cache.get(machine)
+
+
+def is_tresspassed(active_users, owner):
+    allowed_count = 0
+    if owner in active_users:
+        allowed_count = allowed_count + 1 # for the owner
+
+    return ',' in active_users and len(active_users.split(",")) > allowed_count
+
+
+def new_trespassers(machine, active_users):
+    return len(active_users) != len(cache.get(machine))
+
+
+def is_machine_free(machine):
+    return machine.owner == '-'
+
+
+def get_user_email(owner):
+    db_user = User.query.filter_by(name=owner).first()
+    if db_user:
+        return db_user.email
+    return None
+
+
+def send_mail_if_unauthorized_access(machine):
+    users = machine.active_users
+    ip = machine.IP
+    if not is_machine_free(machine) and is_tresspassed(users, machine.owner):
+        if not exists_in_cache(ip) or new_trespassers(ip, users):
+            email = get_user_email(machine.owner)
+            if email:
+                print("Sending an email for unauthorized access")
+                cache[ip] = users
+                Popen(["./send_mail.sh", machine.owner, machine.IP, users, get_user_email(machine.owner)])
+            else:
+                print("Email for {0} not found".format(machine.owner))
+
+
 @app.route('/mapping', methods=["POST"])
 def mapping():
     if request.form:
-        machine = Machine(active_users=request.form.get('vda_ips'),
-                          IP=request.form.get('machine_ip'),
-                          owner=request.form.get('owner').lower())
-        dbMachine = Machine.query.filter_by(IP=machine.IP).first()
+        ip = request.form.get('machine_ip')
+        active_users = request.form.get('vda_ips')
 
-        if dbMachine:
-            dbMachine.active_users = machine.active_users
+        machine = Machine(active_users=active_users,
+                          IP=ip,
+                          owner=request.form.get('owner').lower())
+        db_machine = Machine.query.filter_by(IP=machine.IP).first()
+
+        if db_machine:
+            send_mail_if_unauthorized_access(db_machine)
+            db_machine.active_users = active_users
             db.session.commit()
             return 'Updated Machine'
         else:
+            # add machine flags in the cache
             db.session.add(machine)
             db.session.commit()
             return 'Added Machine'
