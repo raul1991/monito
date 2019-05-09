@@ -19,7 +19,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["PERMANENT_SESSION_LIFETIME"] = 900  # seconds
 db = SQLAlchemy(app)
-cache = {}
 
 
 class Users(db.Model):
@@ -105,7 +104,7 @@ def about():
 
 @app.route('/dashboard')
 def dashboard():
-    if isUserLoggedIn():
+    if is_user_logged_in():
         username = session['user_name']
         curr_user = Users.query.filter_by(username=username).first()
         session['name'] = curr_user.name
@@ -114,20 +113,12 @@ def dashboard():
         return redirect('/')
 
 
-def exists_in_cache(machine):
-    return cache.get(machine)
-
-
-def is_tresspassed(active_users, owner):
+def is_trespassed(active_users, owner):
     allowed_count = 0
     if owner in active_users:
-        allowed_count = allowed_count + 1 # for the owner
+        allowed_count = allowed_count + 1  # for the owner
 
     return ',' in active_users and len(active_users.split(",")) > allowed_count
-
-
-def new_trespassers(machine, active_users):
-    return len(active_users) != len(cache.get(machine))
 
 
 def is_machine_free(machine):
@@ -141,18 +132,26 @@ def get_user_email(owner):
     return None
 
 
+def convert_to_list(users):
+    idx = users.index(',')
+    if idx != -1:
+        return users.split(",")
+    return users
+
+
 def send_mail_if_unauthorized_access(machine):
     users = machine.active_users
-    ip = machine.IP
-    if not is_machine_free(machine) and is_tresspassed(users, machine.owner):
-        if not exists_in_cache(ip) or new_trespassers(ip, users):
-            email = get_user_email(machine.owner)
-            if email:
-                print("Sending an email for unauthorized access")
-                cache[ip] = users
-                Popen(["./send_mail.sh", machine.owner, machine.IP, users, get_user_email(machine.owner)])
-            else:
-                print("Email for {0} not found".format(machine.owner))
+    if not is_machine_free(machine) and is_trespassed(users, machine.owner):
+        email = get_user_email(machine.owner)
+        send_email(email, machine)
+
+
+def send_email(email, machine):
+    if email:
+        print("Sending an email for unauthorized access", email)
+        Popen(["./send_mail.sh", machine.owner, machine.IP, machine.active_users, get_user_email(machine.owner)])
+    else:
+        print("Email for {0} not found".format(machine.owner))
 
 
 @app.route('/mapping', methods=["POST"])
@@ -257,7 +256,7 @@ def mappings():
 # 		return "Added Machine and Users"
 
 
-def isUserLoggedIn():
+def is_user_logged_in():
     try:
         return session['user_name'] != None
     except:
