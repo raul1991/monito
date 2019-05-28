@@ -13,7 +13,7 @@ databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 
 # constants
 UNALLOCATED = '-'
-
+CREDENTIAL_STRING = "" # add your gmail emailid and password below. For example: foo@gmail.com:password@123
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -159,7 +159,7 @@ def send_email(email, machine, template_name, reason):
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
         print("Sending an email for {0} to {1}".format(reason, email))
         # todo: read the credentials from a config file.
-        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, get_user_email(machine.owner), "feedbacker1991@gmail.com:cafebabe1991"])
+        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, get_user_email(machine.owner), CREDENTIAL_STRING])
     else:
         print("Email for {0} not found".format(machine.owner))
 
