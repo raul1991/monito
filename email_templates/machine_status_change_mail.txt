@@ -1,0 +1,18 @@
+from: "admin@Monito"
+Subject: Machine status change notification
+Content-Type: text/html
+Hi,
+
+<br/>
+
+<b>${owner}</b> is working on ${machine} machine. Please ask the owner before you use it.
+
+<br/>
+
+<address>This mail has been sent out by Monito. Contact your admin about in case of doubt.</address>
+
+Love,
+
+<br/>
+
+Monito

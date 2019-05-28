@@ -1,0 +1,12 @@
+from: "admin@Monito" <feedbacker1991@gmail.com>
+Subject: Someone just logged into your machine ${machine}
+Content-Type: text/html
+Hi ${owner},
+<br/><br/>
+The following users are currently logged into your machine.
+<br/>
+<b>${active_users}</b>
+<br/>
+Love,
+<br/>
+Monito
