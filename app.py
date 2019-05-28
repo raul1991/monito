@@ -114,11 +114,12 @@ def dashboard():
 
 
 def is_trespassed(active_users, owner):
+    print("owner: {0} & active_users: {1}".format(owner, active_users))
     allowed_count = 0
     if owner in active_users:
         allowed_count = allowed_count + 1  # for the owner
 
-    return ',' in active_users and len(active_users.split(",")) > allowed_count
+    return active_users != '-' and len(active_users) > allowed_count
 
 
 def is_machine_free(machine):
@@ -131,25 +132,38 @@ def get_user_email(owner):
         return db_user.email
     return None
 
+def get_all_emails(machine, curr_user_email):
+    all_users = Users.query.all()
+    emails = []
+    for user in all_users:
+        if user.email != curr_user_email:
+            emails.append(user.email)
+    print("Recipients ->>>> ", emails)
+    return emails
+
 
 def convert_to_list(users):
-    idx = users.index(',')
-    if idx != -1:
+    delimiter_exists = "," in users
+    if delimiter_exists:
         return users.split(",")
     return users
 
 
-def send_mail_if_unauthorized_access(machine):
+def send_mail_if_unauthorized_access(machine, owner_vdaIP):
     users = machine.active_users
-    if not is_machine_free(machine) and is_trespassed(users, machine.owner):
+    if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
-        send_email(email, machine)
+        send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+    else:
+        print("Not sending email....")
 
 
-def send_email(email, machine):
+def send_email(email, machine, template_name, reason):
     if email:
-        print("Sending an email for unauthorized access", email)
-        Popen(["./send_mail.sh", machine.owner, machine.IP, machine.active_users, get_user_email(machine.owner)])
+        capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
+        print("Sending an email for {0}".format(reason), email)
+        # todo: read the credentials from a config file.
+        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, get_user_email(machine.owner), "feedbacker1991@gmail.com:cafebabe1991"])
     else:
         print("Email for {0} not found".format(machine.owner))
 
@@ -166,12 +180,12 @@ def mapping():
         db_machine = Machine.query.filter_by(IP=machine.IP).first()
 
         if db_machine:
-            send_mail_if_unauthorized_access(db_machine)
+            curr_owner = Users.query.filter_by(name=db_machine.owner).first()
             db_machine.active_users = active_users
             db.session.commit()
+            send_mail_if_unauthorized_access(db_machine, curr_owner.vdaIP)
             return 'Updated Machine'
         else:
-            # add machine flags in the cache
             db.session.add(machine)
             db.session.commit()
             return 'Added Machine'
@@ -186,6 +200,7 @@ def allocate(machine_ip):
             db_machine.owner = session['name']
             db_machine.is_allocated = True
             db.session.commit()
+            send_email(get_all_emails(db_machine, get_user_email(db_machine.owner)), db_machine, "machine_status_change_mail.txt", "Machine status")
             return 'Updated'
         else:
             print("inside else")

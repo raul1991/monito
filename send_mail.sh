@@ -1,2 +1,15 @@
 #!/bin/bash
-cat mail.txt | sed -e s/'${owner}'/"$1"/g -e s/'${active_users}'/"$3"/g -e s/'${machine}'/"$2"/g | curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd  --mail-rcpt "$4" --upload-file - --user 'feedbacker1991@gmail.com:cafebabe1991' --insecure
+
+function send_email()
+{
+    cat "$1" | sed -e s/'${owner}'/"$2"/g -e s/'${active_users}'/"$4"/g -e s/'${machine}'/"$3"/g | curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd  --mail-rcpt "$5" --upload-file - --user "$6" --insecure
+}
+
+template_file="$1"
+owner="$2"
+machine="$3"
+active_users="$4"
+recipient="$5"
+creds="$6"
+
+send_email "${template_file}" "${owner}" "${machine}" "${active_users}" "${recipient}" "${creds}"
