@@ -41,14 +41,16 @@ var _gui = (function () {
     var tabs = (function () {
         var allocatedMachines = {};
         var machinePool = {};
+        var otherMachinePool = {}; // the pool which is allocated to other users
         var allocatedMachineView = $('#myMachinesView');
         var machinePoolView = $('#allMachinesView');
+        var otherMachinesView = $('#otherMachinesView');
+        var columns = ['machine', 'owner', 'users', 'actions']; // change the sequences to change the order of display.
 
         var table = (function () {
-            var columns = ['machine', 'owner', 'users', 'actions']; // change the sequences to change the order of display.
 
             var actions = (function () {
-                var build = function (rowData) {
+                var build = function (rowData, columns) {
                     var row = $('<tr></tr>').attr('id', rowData.machine);
                     for (var k in columns) {
                         if (columns.hasOwnProperty(k)) {
@@ -81,7 +83,7 @@ var _gui = (function () {
             machineData.isAllocated = false;
             machineData.owner = '-'; // hack.
             // append the new row
-            machinePoolView.append(table.actions.buildRow(machineData));
+            machinePoolView.append(table.actions.buildRow(machineData, columns));
         };
 
         var allocateMachine = function (machineData) {
@@ -96,7 +98,7 @@ var _gui = (function () {
             machineData.isAllocated = true;
             machineData.owner = $('#name').html(); // hack.
             // append the new row
-            allocatedMachineView.append(table.actions.buildRow(machineData));
+            allocatedMachineView.append(table.actions.buildRow(machineData, columns));
         };
 
         /**
@@ -165,11 +167,11 @@ var _gui = (function () {
          * @param poolType - either machinePool or freeMachines object
          *
          */
-        var renderTable = (function (data, view, poolType) {
+        var renderTable = (function (data, view, poolType, cols) {
             // for each tab
             $.each(data, function (key, rowData) {
                 // for each row update the view.
-                var newRow = table.actions.buildRow(rowData);
+                var newRow = table.actions.buildRow(rowData, cols);
                 view.append(newRow);
                 // add machine to the corresponding pool
                 poolType[rowData.machine] = rowData;
@@ -184,15 +186,20 @@ var _gui = (function () {
             var exemptions = $('.exempted-headers').detach(); // headers of the tables should be preserved.
             allocatedMachineView.empty().append(exemptions[0]); // delete all child nodes and recreate as per the server response.
             machinePoolView.empty().append(exemptions[1]);
+            otherMachinesView.empty().append(exemptions[2]);
 
             // reload the gui.
             renderTable(machines.filter(function (machine) {
                 return !machine.isAllocated;
-            }), machinePoolView, machinePool);
+            }), machinePoolView, machinePool, columns);
 
             renderTable(machines.filter(function (machine) {
                 return isAllocatedToMe(machine);
-            }), allocatedMachineView, allocatedMachines);
+            }), allocatedMachineView, allocatedMachines, columns);
+
+            renderTable(machines.filter(function (machine) {
+                return machine.isAllocated && machine.owner !== $("#name").html();
+            }), otherMachinesView, otherMachinePool, ['machine', 'owner', 'users']);
         });
 
         return {
