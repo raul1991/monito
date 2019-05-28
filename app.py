@@ -114,7 +114,6 @@ def dashboard():
 
 
 def is_trespassed(active_users, owner):
-    print("owner: {0} & active_users: {1}".format(owner, active_users))
     allowed_count = 0
     if owner in active_users:
         allowed_count = allowed_count + 1  # for the owner
@@ -138,7 +137,6 @@ def get_all_emails(machine, curr_user_email):
     for user in all_users:
         if user.email != curr_user_email:
             emails.append(user.email)
-    print("Recipients ->>>> ", emails)
     return emails
 
 
@@ -154,14 +152,12 @@ def send_mail_if_unauthorized_access(machine, owner_vdaIP):
     if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
         send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
-    else:
-        print("Not sending email....")
 
 
 def send_email(email, machine, template_name, reason):
     if email:
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
-        print("Sending an email for {0}".format(reason), email)
+        print("Sending an email for {0} to {1}".format(reason, email))
         # todo: read the credentials from a config file.
         Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, get_user_email(machine.owner), "feedbacker1991@gmail.com:cafebabe1991"])
     else:
@@ -203,8 +199,6 @@ def allocate(machine_ip):
             send_email(get_all_emails(db_machine, get_user_email(db_machine.owner)), db_machine, "machine_status_change_mail.txt", "Machine status")
             return 'Updated'
         else:
-            print("inside else")
-            # return 404 because machine does not exists.
             return Response({'msg': "Action could not be completed"}, status=404)
 
 

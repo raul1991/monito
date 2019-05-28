@@ -2,7 +2,7 @@
 
 function send_email()
 {
-    cat "$1" | sed -e s/'${owner}'/"$2"/g -e s/'${active_users}'/"$4"/g -e s/'${machine}'/"$3"/g | curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd  --mail-rcpt "$5" --upload-file - --user "$6" --insecure
+    cat "$1" | sed -e s/'${owner}'/"$2"/g -e s/'${active_users}'/"$4"/g -e s/'${machine}'/"$3"/g | curl -s --url 'smtps://smtp.gmail.com:465' --ssl-reqd  --mail-rcpt "$5" --upload-file - --user "$6" --insecure
 }
 
 template_file="$1"
