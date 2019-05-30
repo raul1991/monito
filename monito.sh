@@ -5,7 +5,7 @@ key_file="" #for ssh key file. Must the absolute path
 machines="" # for file that consists of host,team,username separated by comma.
 
 cmd='who | grep -oE "([a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+)"' # run the who command and grep on the ip or host name.
-myHostName=`hostname`
+myHostName=`hostname -i`
 shouldAddMachines="true"
 
 
@@ -25,14 +25,13 @@ function getVisitors
 	else
 		result=$(ssh ${user}@${machine} -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes -t ${cmd})
 		ips=()
-		for visitor in ${result}
-		do
+		while read -r visitor;do
 			shopt -s nocasematch
 			if [[ ! "$visitor" =~ $myHostName.* ]];then
 				ips+=("${visitor}")
 			fi
 			shopt -u nocasematch
-		done
+		done <<< "${result}"
 		if [[ $ips == "" ]];then
 			ips="-";
 		fi

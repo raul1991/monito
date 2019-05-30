@@ -13,7 +13,7 @@ databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 
 # constants
 UNALLOCATED = '-'
-CREDENTIAL_STRING = "" # add your gmail emailid and password below. For example: foo@gmail.com:password@123
+CREDENTIAL_STRING = "feedbacker1991@gmail.com:Bazinga@365" # add your gmail emailid and password below. For example: foo@gmail.com:password@123
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -137,7 +137,7 @@ def get_all_emails(machine, curr_user_email):
     for user in all_users:
         if user.email != curr_user_email:
             emails.append(user.email)
-    return emails
+    return ",".join(emails)
 
 
 def convert_to_list(users):
@@ -159,7 +159,7 @@ def send_email(email, machine, template_name, reason):
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
         print("Sending an email for {0} to {1}".format(reason, email))
         # todo: read the credentials from a config file.
-        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, get_user_email(machine.owner), CREDENTIAL_STRING])
+        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, email, CREDENTIAL_STRING])
     else:
         print("Email for {0} not found".format(machine.owner))
 
@@ -177,9 +177,10 @@ def mapping():
 
         if db_machine:
             curr_owner = Users.query.filter_by(name=db_machine.owner).first()
-            db_machine.active_users = active_users
-            db.session.commit()
-            send_mail_if_unauthorized_access(db_machine, curr_owner.vdaIP)
+	    if curr_owner:
+            	db_machine.active_users = active_users
+            	db.session.commit()
+            	send_mail_if_unauthorized_access(db_machine, curr_owner.vdaIP)
             return 'Updated Machine'
         else:
             db.session.add(machine)
