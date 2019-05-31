@@ -13,7 +13,6 @@ databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 
 # constants
 UNALLOCATED = '-'
-CREDENTIAL_STRING = "feedbacker1991@gmail.com:Bazinga@365" # add your gmail emailid and password below. For example: foo@gmail.com:password@123
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databaseFile
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -114,10 +113,16 @@ def dashboard():
 
 
 def is_trespassed(active_users, owner):
+    print(active_users)
+    print(owner)
     allowed_count = 0
-    if owner in active_users:
-	allowed_count = allowed_count + 1  # for the owner
+    for u in active_users:
+	if owner in str(u):
+		allowed_count = allowed_count + 1  # for the owner
+		break
 
+    	else:
+		print("Not matched")
     return "-" not in active_users and len(active_users) > allowed_count
 
 
@@ -151,15 +156,15 @@ def send_mail_if_unauthorized_access(machine, owner_vdaIP):
     users = convert_to_list(machine.active_users)
     if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
-        send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+	print("Email sending for unauthorized_access has been disabled to avoid flooding")
+        #send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
 
 
 def send_email(email, machine, template_name, reason):
     if email:
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
         print("Sending an email for {0} to {1}".format(reason, email))
-        # todo: read the credentials from a config file.
-        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, email, CREDENTIAL_STRING])
+        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, email])
     else:
         print("Email for {0} not found".format(machine.owner))
 
