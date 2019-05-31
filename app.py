@@ -116,9 +116,9 @@ def dashboard():
 def is_trespassed(active_users, owner):
     allowed_count = 0
     if owner in active_users:
-        allowed_count = allowed_count + 1  # for the owner
+	allowed_count = allowed_count + 1  # for the owner
 
-    return active_users != '-' and len(active_users) > allowed_count
+    return "-" not in active_users and len(active_users) > allowed_count
 
 
 def is_machine_free(machine):
@@ -143,12 +143,12 @@ def get_all_emails(machine, curr_user_email):
 def convert_to_list(users):
     delimiter_exists = "," in users
     if delimiter_exists:
-        return users.split(",")
-    return users
+        return map(lambda s: s.strip(), users.split(","))
+    return [users.strip()]
 
 
 def send_mail_if_unauthorized_access(machine, owner_vdaIP):
-    users = machine.active_users
+    users = convert_to_list(machine.active_users)
     if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
         send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
@@ -169,7 +169,6 @@ def mapping():
     if request.form:
         ip = request.form.get('machine_ip')
         active_users = request.form.get('vda_ips')
-
         machine = Machine(active_users=active_users,
                           IP=ip,
                           owner=request.form.get('owner').lower())
@@ -180,7 +179,7 @@ def mapping():
 	    if curr_owner:
             	db_machine.active_users = active_users
             	db.session.commit()
-            	send_mail_if_unauthorized_access(db_machine, curr_owner.vdaIP)
+                send_mail_if_unauthorized_access(db_machine, curr_owner.hostname)
             return 'Updated Machine'
         else:
             db.session.add(machine)
