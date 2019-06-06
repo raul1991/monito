@@ -41,4 +41,4 @@ This repo is for Monito related development and issues. This app has not been te
 
 ##### Misc
     * Open `http://localhost:5000` for viewing the dashboard.
-	* Use `-h` for help menu
+	* Use `-h` for help menu.
