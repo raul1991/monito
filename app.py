@@ -44,8 +44,8 @@ class Machine(db.Model):
 
     def __repr__(self):
         return (
-                "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.active_users) + " Owner: {}>".format(
-            self.owner) + " is_allocated: {}>".format(self.is_allocated))
+            "<Machine IP: {}".format(self.IP) + " VDA-IPs: {}".format(self.active_users) + " Owner: {}>".format(
+                self.owner) + " is_allocated: {}>".format(self.is_allocated))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -117,12 +117,12 @@ def is_trespassed(active_users, owner):
     print(owner)
     allowed_count = 0
     for u in active_users:
-	if owner in str(u):
-		allowed_count = allowed_count + 1  # for the owner
-		break
+        if owner in str(u):
+            allowed_count = allowed_count + 1  # for the owner
+            break
 
-    	else:
-		print("Not matched")
+        else:
+            print("Not matched")
     return "-" not in active_users and len(active_users) > allowed_count
 
 
@@ -135,6 +135,7 @@ def get_user_email(owner):
     if db_user:
         return db_user.email
     return None
+
 
 def get_all_emails(machine, curr_user_email):
     all_users = Users.query.all()
@@ -156,15 +157,16 @@ def send_mail_if_unauthorized_access(machine, owner_vdaIP):
     users = convert_to_list(machine.active_users)
     if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
-	print("Email sending for unauthorized_access has been disabled to avoid flooding")
+        print("Email sending for unauthorized_access has been disabled to avoid flooding")
         #send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
 
 
 def send_email(email, machine, template_name, reason):
     if email:
-        capitalized_owner = machine.owner[0].upper() + machine.owner[1:];
+        capitalized_owner = machine.owner[0].upper() + machine.owner[1:]
         print("Sending an email for {0} to {1}".format(reason, email))
-        Popen(["./send_mail.sh", "email_templates/" + template_name , capitalized_owner, machine.IP, machine.active_users, email])
+        Popen(["./send_mail.sh", "email_templates/" + template_name,
+               capitalized_owner, machine.IP, machine.active_users, email])
     else:
         print("Email for {0} not found".format(machine.owner))
 
@@ -181,10 +183,11 @@ def mapping():
 
         if db_machine:
             curr_owner = Users.query.filter_by(name=db_machine.owner).first()
-	    if curr_owner:
-            	db_machine.active_users = active_users
-            	db.session.commit()
-                send_mail_if_unauthorized_access(db_machine, curr_owner.hostname)
+            if curr_owner:
+                db_machine.active_users = active_users
+                db.session.commit()
+                send_mail_if_unauthorized_access(
+                    db_machine, curr_owner.hostname)
             return 'Updated Machine'
         else:
             db.session.add(machine)
@@ -195,13 +198,15 @@ def mapping():
 @app.route('/allocate/<machine_ip>', methods=["PUT"])
 def allocate(machine_ip):
     if request.form:
-        db_machine = Machine.query.filter_by(IP=machine_ip).filter_by(is_allocated=False).first()
+        db_machine = Machine.query.filter_by(
+            IP=machine_ip).filter_by(is_allocated=False).first()
         if db_machine:
             # make the currently logged user as the owner of this machine.
             db_machine.owner = session['name']
             db_machine.is_allocated = True
             db.session.commit()
-            send_email(get_all_emails(db_machine, get_user_email(db_machine.owner)), db_machine, "machine_status_change_mail.txt", "Machine status")
+            send_email(get_all_emails(db_machine, get_user_email(db_machine.owner)),
+                       db_machine, "machine_status_change_mail.txt", "Machine status")
             return 'Updated'
         else:
             return Response({'msg': "Action could not be completed"}, status=404)
@@ -210,7 +215,8 @@ def allocate(machine_ip):
 @app.route('/release/<machine_ip>', methods=["PUT"])
 def release(machine_ip):
     if request.form:
-        db_machine = Machine.query.filter_by(IP=machine_ip).filter_by(is_allocated=True).first()
+        db_machine = Machine.query.filter_by(
+            IP=machine_ip).filter_by(is_allocated=True).first()
         if db_machine and db_machine.owner == session['name']:
             # it's a legit de-allocation.
             db_machine.owner = UNALLOCATED
@@ -239,7 +245,8 @@ def mappings():
         machine_obj = {}
         for IP in active_user_machine_names:
             userByVDA = Users.query.filter_by(vdaIP=IP).first()
-            userByHost = Users.query.filter(Users.hostname.ilike(IP.split(".")[0] + "%")).first()
+            userByHost = Users.query.filter(
+                Users.hostname.ilike(IP.split(".")[0] + "%")).first()
             if userByVDA:
                 active_users += userByVDA.name + ','
             elif userByHost:
