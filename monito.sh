@@ -5,7 +5,7 @@ key_file="" #for ssh key file. Must the absolute path
 machines="" # for file that consists of host,team,username separated by comma.
 
 cmd='who | grep -oE "([a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+)"' # run the who command and grep on the ip or host name.
-myHostName=`hostname -i`
+myHostName=$(hostname -i)
 shouldAddMachines="true"
 
 
@@ -17,13 +17,13 @@ function getVisitors
 	team="$2"
 	user="$3"
 	echo "Running ${cmd} on ${machine}"
-		ssh ${user}@${machine} -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes exit
-		isMachineUp=$?
-	if [[ $isMachineUp -ne 0 ]];then
+	ssh "${user}@${machine}" -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes exit
+	isMachineUp=$?
+	if [[ "$isMachineUp" -ne 0 ]];then
 		echo "Machine is down"
 		ips='-'
 	else
-		result=$(ssh ${user}@${machine} -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes -t ${cmd})
+		result=$(ssh "${user}@${machine}" -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes -t "${cmd}")
 		ips=()
 		while read -r visitor;do
 			shopt -s nocasematch
