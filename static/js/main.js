@@ -75,6 +75,7 @@ var monito = (function (preferences, requests, gui) {
         init: init,
         refresh: autoRefresh,
         displayInfo: displayInfo,
-        displayMenu: displayMenu
+        displayMenu: displayMenu,
+        showSnackbar: _helpers.showSnackbar
     }
 })(_prefs, _requests, _gui);
