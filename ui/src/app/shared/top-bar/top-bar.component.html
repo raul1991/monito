@@ -11,6 +11,7 @@
       <a
         class="btn btn-outline-primary text-uppercase"
         routerLink="/auth/register"
+        style="margin-right: 10px"
         >Signup</a
       >
       <a class="btn btn-outline-primary text-uppercase" routerLink="/auth/login"
@@ -18,7 +19,7 @@
       >
     </nav>
     <nav class="my-2 my-md-0 mr-md-3" *ngIf="isLoggedIn">
-      <a class="p-2 text-dark">Contact</a>
+      <a class="p-2 text-dark" style="margin-right: 10px">Contact</a>
       <!-- href="mailto:{{ author }}?Subject=Monito%20Feedback" -->
       <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
     </nav>

@@ -16,9 +16,10 @@ import { AuthEffects } from "./store/effects/auth.effects";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { environment } from "../environments/environment";
 import { AuthGuard } from "./auth/auth.guard";
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent],
+  declarations: [AppComponent, DashboardComponent, AboutComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
