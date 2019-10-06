@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <!-- nav bar begins -->
+    <app-top-bar></app-top-bar>
+    <!-- Main Content -->
+    <div class="container">
+      <div
+        class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm"
+      >
+        <h5 class="my-0 mr-md-auto font-weight-normal">
+          <div class="col-6 form-group text-center">
+            <img
+              src="/assets/images/Monito-1-dark.png"
+              height="40"
+              width="150"
+              alt="Monito"
+            />
+          </div>
+        </h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+          <a class="btn btn-outline-primary text-uppercase" href="/register"
+            >Signup</a
+          >
+          <a class="btn btn-outline-primary text-uppercase" href="/">LOGIN</a>
+        </nav>
+      </div>
+      <!-- nav bar ends -->
+      <div class="container">
+        <div class="form-row">
+          <div class="col-12">
+            <div class="row justify-content-center">
+              <img
+                src="/assets/images/Monito-1-dark.png"
+                width="250"
+                height="70"
+                alt="Monito"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Routed components here -->
+        <router-outlet></router-outlet>
+
+        <!-- footer -->
+
+        <!-- footer ends -->
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </body>
+</html>
+
+<!-- Scripts
+    <script src="/static/js/vendor/jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/vendor/popper.min.js"></script>
+    <script src="/static/js/vendor/bootstrap.min.js"></script>
+    Place this tag in your head or just before your close body tag.
+    <script async defer src="/static/js/vendor/github_buttons.js"></script>
+    <script type="text/javascript" src="/static/js/helpers.js"></script> -->
