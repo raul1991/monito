@@ -1,1 +1,76 @@
-<p>register works!</p>
+<div class="container">
+  <div class="monito-login-wrapper row justify-content-center">
+    <div class="col-md-8 col-sm-8 col-lg-8">
+      <form [formGroup]="form" (ngSubmit)="processRegistration(form.value)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            name="user_name"
+            placeholder="full name"
+            pattern="^[a-zA-Z ]+$"
+            required
+            formControlName="name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-control"
+            placeholder="signum"
+            pattern="^[a-zA-Z]{5,15}$"
+            required
+            formControlName="username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="email address"
+            required
+            formControlName="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="vda-ip">Static Ip address</label>
+          <input
+            type="text"
+            id="vda-ip"
+            name="user_vda-ip"
+            class="form-control"
+            placeholder="xxx.xxx.xx.x"
+            pattern="^[0-9.]+$"
+            required
+            formControlName="staticIP"
+          />
+          <small>A static ip with which you'll access servers</small>
+        </div>
+        <div class="form-group">
+          <label for="hostname">Hostname</label>
+          <input
+            type="text"
+            id="hostname"
+            name="user_hostname"
+            class="form-control"
+            placeholder="Run `hostname` command"
+            required
+            formControlName="hostname"
+          />
+        </div>
+        <!-- <label>Error Label</label> -->
+        <button class="btn btn-block btn-outline-primary" type="submit">
+          Register
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

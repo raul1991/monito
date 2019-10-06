@@ -1,10 +1,26 @@
-<!-- Logged Out State -->
-<!-- <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-    <h5 class="my-0 mr-md-auto font-weight-normal">
-        <img src="/static/images/Monito-1-dark.png" height="40" width="150">
-    </h5>
-    <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="mailto:{{author}}?Subject=Monito%20Feedback">Contact</a>
+<div class="navbar navbar-dark bg-light shadow-sm">
+  <div class="container d-flex justify-content-between">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <img
+        src="/assets/images/Monito-1-dark.png"
+        height="40"
+        width="150"
+        alt="Monito"
+    /></a>
+    <nav class="my-2 my-md-0 mr-md-3" *ngIf="!isLoggedIn">
+      <a
+        class="btn btn-outline-primary text-uppercase"
+        routerLink="/auth/register"
+        >Signup</a
+      >
+      <a class="btn btn-outline-primary text-uppercase" routerLink="/auth/login"
+        >LOGIN</a
+      >
     </nav>
-    <a class="btn btn-outline-primary" href="/">Logout</a>
-</div> -->
+    <nav class="my-2 my-md-0 mr-md-3" *ngIf="isLoggedIn">
+      <a class="p-2 text-dark">Contact</a>
+      <!-- href="mailto:{{ author }}?Subject=Monito%20Feedback" -->
+      <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
+    </nav>
+  </div>
+</div>

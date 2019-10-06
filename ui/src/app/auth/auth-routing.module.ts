@@ -11,6 +11,15 @@ const routes: Routes = [
   {
     path: "register",
     component: RegisterComponent
+  },
+  {
+    path: "",
+    component: LoginComponent,
+    pathMatch: "full"
+  },
+  {
+    path: "**",
+    component: LoginComponent
   }
 ];
 
