@@ -1,5 +1,5 @@
 //Responsive menu
-var monito = (function (preferences, requests, gui) {
+var monito = (function (preferences, requests, gui, helpers) {
     var display = false;
     var autoRefreshElRef = document.getElementById('toggleAutoRefresh');
     var refreshIntervalId; // used to store the refresh interval id in order to clear it later on.
@@ -76,6 +76,6 @@ var monito = (function (preferences, requests, gui) {
         refresh: autoRefresh,
         displayInfo: displayInfo,
         displayMenu: displayMenu,
-        showSnackbar: _helpers.showSnackbar
+        showSnackbar: helpers.showSnackbar
     }
-})(_prefs, _requests, _gui);
+})(_prefs, _requests, _gui, _helpers);
