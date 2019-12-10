@@ -57,7 +57,7 @@ def login():
         userName = request.form.get('username')
 
         for user in users:
-            if user.username == userName:
+            if user.username == userName.strip().lower():
                 session['user_name'] = user.username
                 session['user_id'] = user.id
                 return redirect('/dashboard')
