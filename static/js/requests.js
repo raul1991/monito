@@ -12,7 +12,7 @@ var _requests = (function () {
         };
         xmlRequest.open(config.requestType, config.url, true); // async
         if (config.data) {
-            xmlRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlRequest.setRequestHeader('Content-type', 'application/application');
             xmlRequest.send("data=" + encodeURIComponent(config.data));
         } else {
             xmlRequest.send();

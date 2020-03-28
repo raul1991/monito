@@ -1,0 +1,4 @@
+[
+  {"host": "localhost", "owner": "-", "port": 2222, "password": "foo", "user": "root"},
+  {"host": "localhost", "owner": "-", "port": 2222, "password": "foo", "user": "root"}
+]

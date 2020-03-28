@@ -54,15 +54,15 @@ def login():
     session.clear()
 
     if request.form:
-        userName = request.form.get('username')
+        user_name = request.form.get('username')
 
         for user in users:
-            if user.username == userName.strip().lower():
+            if user.username == user_name.strip().lower():
                 session['user_name'] = user.username
                 session['user_id'] = user.id
                 return redirect('/dashboard')
 
-        return render_template('login.html', SERVER_ERROR='Oops! username \'{}\' does not exists.'.format(userName))
+        return render_template('login.html', SERVER_ERROR='Oops! username \'{}\' does not exists.'.format(user_name))
 
     return render_template('login.html')
 
@@ -70,7 +70,7 @@ def login():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     users = Users.query.all()
-    userExists = False
+    user_exists = False
 
     if request.form:
 
@@ -82,10 +82,10 @@ def register():
 
         for elem in users:
             if elem.email == user.email or elem.username == user.username or elem.vdaIP == user.vdaIP or elem.hostname == user.hostname:
-                userExists = True
+                user_exists = True
                 break
 
-        if not userExists:
+        if not user_exists:
             db.session.add(user)
             db.session.commit()
 
@@ -137,7 +137,7 @@ def get_user_email(owner):
     return None
 
 
-def get_all_emails(machine, curr_user_email):
+def get_all_emails(curr_user_email):
     all_users = Users.query.all()
     emails = []
     for user in all_users:
@@ -153,32 +153,40 @@ def convert_to_list(users):
     return [users.strip()]
 
 
-def send_mail_if_unauthorized_access(machine, owner_vdaIP):
+def send_mail_if_unauthorized_access(machine, owner_vda_ip):
     users = convert_to_list(machine.active_users)
-    if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
+    if not is_machine_free(machine) and is_trespassed(users, owner_vda_ip):
         email = get_user_email(machine.owner)
         print("Email sending for unauthorized_access has been disabled to avoid flooding")
-        #send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+        # send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
 
 
 def send_email(email, machine, template_name, reason):
     if email:
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:]
         print("Sending an email for {0} to {1}".format(reason, email))
-        Popen(["./send_mail.sh", "email_templates/" + template_name,
-               capitalized_owner, machine.IP, machine.active_users, email])
+        Popen(
+            ["./send_mail.sh", "email_templates/" + template_name, capitalized_owner, machine.IP, machine.active_users,
+             email])
     else:
         print("Email for {0} not found".format(machine.owner))
 
 
+@app.route('/machine/<ip>', methods=["GET"])
+def exists(ip):
+    exits = Machine.query.filter_by(IP=ip).first() is None
+    return json.dumps({"machine": ip, "exists": exits})
+
+
 @app.route('/mapping', methods=["POST"])
 def mapping():
-    if request.form:
-        ip = request.form.get('machine_ip')
-        active_users = request.form.get('vda_ips')
+    if request.is_json:
+        req = request.get_json()
+        ip = req['machine_ip']
+        active_users = req['vda_ips']
         machine = Machine(active_users=active_users,
                           IP=ip,
-                          owner=request.form.get('owner').lower())
+                          owner=req['owner'].lower())
         db_machine = Machine.query.filter_by(IP=machine.IP).first()
 
         if db_machine:
@@ -186,8 +194,7 @@ def mapping():
             if curr_owner:
                 db_machine.active_users = active_users
                 db.session.commit()
-                send_mail_if_unauthorized_access(
-                    db_machine, curr_owner.hostname)
+                send_mail_if_unauthorized_access(db_machine, curr_owner.hostname)
             return 'Updated Machine'
         else:
             db.session.add(machine)
@@ -205,8 +212,12 @@ def allocate(machine_ip):
             db_machine.owner = session['name']
             db_machine.is_allocated = True
             db.session.commit()
-            send_email(get_all_emails(db_machine, get_user_email(db_machine.owner)),
-                       db_machine, "machine_status_change_mail.txt", "Machine status")
+            recipients = get_all_emails(get_user_email(db_machine.owner))
+            if len(recipients) == 0:
+                print("No recipient available to send an email to")
+            else:
+                send_email(recipients, db_machine, template_name="machine_status_change_mail.txt",
+                           reason="Machine status")
             return 'Updated'
         else:
             return Response({'msg': "Action could not be completed"}, status=404)
@@ -244,13 +255,13 @@ def mappings():
         active_users = ''
         machine_obj = {}
         for IP in active_user_machine_names:
-            userByVDA = Users.query.filter_by(vdaIP=IP).first()
-            userByHost = Users.query.filter(
+            user_by_vda = Users.query.filter_by(vdaIP=IP).first()
+            user_by_host = Users.query.filter(
                 Users.hostname.ilike(IP.split(".")[0] + "%")).first()
-            if userByVDA:
-                active_users += userByVDA.name + ','
-            elif userByHost:
-                active_users += userByHost.name + ','
+            if user_by_vda:
+                active_users += user_by_vda.name + ','
+            elif user_by_host:
+                active_users += user_by_host.name + ','
             else:
                 active_users += IP.lower() + ','
             machine_obj = {
@@ -279,8 +290,9 @@ def mappings():
 
 def is_user_logged_in():
     try:
-        return session['user_name'] != None
-    except:
+        return session['user_name'] is not None
+    except Exception as e:
+        print("Session key failure: {e}".format(e=e))
         return False
 
 

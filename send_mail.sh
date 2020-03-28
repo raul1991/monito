@@ -10,5 +10,5 @@ owner="$2"
 machine="$3"
 active_users="$4"
 recipient="$5"
-
+echo "Received =====>$@"
 send_email "${template_file}" "${owner}" "${machine}" "${active_users}" "${recipient}"
