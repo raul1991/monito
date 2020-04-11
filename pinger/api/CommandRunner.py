@@ -1,4 +1,5 @@
 import json
+import os
 
 from fabric import ThreadingGroup
 
@@ -7,6 +8,8 @@ class CommandRunner(object):
     def __init__(self, config):
         print("Command runner initialized")
         self.config = config
+        self.filename = os.environ.get("PRIVATE_KEY")
+        self.password = os.environ.get('SERVERS_PASSWORD', "")
         self.machines_file = config['machines']
         self.cmd = config['command']
 
@@ -18,7 +21,9 @@ class CommandRunner(object):
             return
         print("Running cmd: {cmd}".format(cmd=self.cmd))
         try:
-            for connection in ThreadingGroup(*hosts):
+            for connection in ThreadingGroup(*hosts, connect_kwargs={
+                'key_filename': self.filename
+            }):
                 results.append({"machine": connection.host, "owner": "-", "vda_ips": self.format_result(connection)})
         except Exception as e:
             print("Something went wrong during ssh", e)

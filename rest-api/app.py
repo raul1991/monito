@@ -204,40 +204,38 @@ def mapping():
 
 @app.route('/allocate/<machine_ip>', methods=["PUT"])
 def allocate(machine_ip):
-    if request.form:
-        db_machine = Machine.query.filter_by(
-            IP=machine_ip).filter_by(is_allocated=False).first()
-        if db_machine:
-            # make the currently logged user as the owner of this machine.
-            db_machine.owner = session['name']
-            db_machine.is_allocated = True
-            db.session.commit()
-            recipients = get_all_emails(get_user_email(db_machine.owner))
-            if len(recipients) == 0:
-                print("No recipient available to send an email to")
-            else:
-                send_email(recipients, db_machine, template_name="machine_status_change_mail.txt",
-                           reason="Machine status")
-            return 'Updated'
+    db_machine = Machine.query.filter_by(
+        IP=machine_ip).filter_by(is_allocated=False).first()
+    if db_machine:
+        # make the currently logged user as the owner of this machine.
+        db_machine.owner = session['name']
+        db_machine.is_allocated = True
+        db.session.commit()
+        recipients = get_all_emails(get_user_email(db_machine.owner))
+        if len(recipients) == 0:
+            print("No recipient available to send an email to")
         else:
-            return Response({'msg': "Action could not be completed"}, status=404)
+            send_email(recipients, db_machine, template_name="machine_status_change_mail.txt",
+                       reason="Machine status")
+        return 'Updated'
+    else:
+        return Response({'msg': "Action could not be completed"}, status=404)
 
 
 @app.route('/release/<machine_ip>', methods=["PUT"])
 def release(machine_ip):
-    if request.form:
-        db_machine = Machine.query.filter_by(
-            IP=machine_ip).filter_by(is_allocated=True).first()
-        if db_machine and db_machine.owner == session['name']:
-            # it's a legit de-allocation.
-            db_machine.owner = UNALLOCATED
-            db_machine.is_allocated = False
-            db.session.commit()
-            return 'Updated'
-        else:
-            # return 404 because machine does not exists.
-            return Response({'msg': "Action could not be completed"}, status=404,
-                            mimetype={'Content-Type': 'application/json'})
+    db_machine = Machine.query.filter_by(
+        IP=machine_ip).filter_by(is_allocated=True).first()
+    if db_machine and db_machine.owner == session['name']:
+        # it's a legit de-allocation.
+        db_machine.owner = UNALLOCATED
+        db_machine.is_allocated = False
+        db.session.commit()
+        return 'Updated'
+    else:
+        # return 404 because machine does not exists.
+        return Response({'msg': "Action could not be completed"}, status=404,
+                        mimetype={'Content-Type': 'application/json'})
 
 
 def get_actions(owner):

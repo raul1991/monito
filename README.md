@@ -1,4 +1,4 @@
-# ![Monito](static/images/Monito-1-dark.png) #
+# ![Monito](rest-api/static/images/Monito-1-dark.png) #
 
 It monitors the servers on a network using a config file and reports the users that are currently logged in it.
 
@@ -38,8 +38,11 @@ I use it for the same purpose and infact made it because of this reason as well.
         - hostname,owner name,username-to-use-to-login
     * Run the dashboard app
         - `python app.py`
+    * Export these environment variables for the pinger script
+        - `export SERVERS_PASSWORD=PASSWORDS_YOU_USE_TO_ACCESS_SERVERS`
+        - `export PRIVATE_KEY=/path/to/home/.ssh/id_rsa.pub`
     * Run the script for getting the live users
-        - `cd pinger/api && python pinger.py ../resources/config.ini`
+        - `cd pinger/api && python Ping.py ../resources/config.ini`
 # Technical diagram
 <p align="center">
     <img src="monito-diagram.png"/>

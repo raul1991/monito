@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+scrape_configs:
+  - job_name: 'monito-rest-api'
+    static_configs:
+      - targets: ['rest-api:5000']

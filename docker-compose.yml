@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  rest-api:
+    container_name: 'rest-api'
+    build: rest-api
+    restart: on-failure
+    ports:
+      - '5000:5000'
+    depends_on:
+      - prometheus
+      - grafana
+    volumes:
+      - "rest-api-storage:/var/lib/monito/rest-api"
+    networks:
+      monito:
+
+  prometheus:
+    container_name: 'prometheus'
+    build: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - grafana
+    networks:
+      monito:
+
+  grafana:
+    container_name: 'grafana'
+    build: grafana
+    env_file:
+      - ./.env
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    volumes:
+      - "grafana-storage:/var/lib/grafana"
+    networks:
+      monito:
+
+  ssh:
+    container_name: 'ssh-docker'
+    image: docker.io/panubo/sshd:1.2.0
+    ports:
+      - "2222:22"
+    volumes:
+      - ${HOME}/.ssh/id_rsa.pub:/root/.ssh/authorized_keys:ro
+      - ./ssh/keys/:/etc/ssh/keys
+      - ./ssh/data/:/data/
+    environment:
+      SSH_ENABLE_ROOT: 'true'
+volumes:
+  grafana-storage:
+  rest-api-storage:
+
+networks:
+  monito:

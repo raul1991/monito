@@ -1,10 +1,11 @@
 import json
 import time
 
-from pinger.api.Api import MachineRequest, Api
+import sys
+
+from pinger.api.Api import Api, MachineRequest
 from pinger.api.CommandRunner import CommandRunner
 from pinger.api.ConfigFileParser import ConfigFileReader
-import sys
 
 
 class Init(object):
@@ -24,7 +25,10 @@ class Init(object):
         runner.prepare_connection_strs()
         while True:
             for req in runner.perform_parallel_run():
-                json.loads(self.api_config.exits(req['machine']).text)
+                try:
+                    json.loads(self.api_config.exits(req['machine']).text)
+                except Exception as e:
+                    print("Something went wrong parsing the response", e)
                 request = self.to(req)
                 self.api_config.update_mapping(request=request)
             time.sleep(10)
@@ -35,4 +39,6 @@ class Init(object):
         return MachineRequest(machine=obj['machine'], visitors=obj['vda_ips'], actual_owner=obj['owner'])
 
 
-Init()
+if __name__ == '__main__':
+    print("Starting up the Init script for pinging the servers")
+    Init()
