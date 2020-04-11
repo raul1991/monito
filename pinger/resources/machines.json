@@ -1,4 +1,4 @@
 [
-  {"host": "localhost", "owner": "-", "port": 2222, "pkey_file": "pinger/resources/id_rsa.pub", "user": "root"},
-  {"host": "localhost", "owner": "-", "port": 2222, "pkey_file": "pinger/resources/id_rsa.pub", "user": "root"}
+  {"host": "localhost", "owner": "-", "port": 2222, "user": "root"},
+  {"host": "localhost", "owner": "-", "port": 2222, "user": "root"}
 ]

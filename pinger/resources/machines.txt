@@ -1,3 +1,0 @@
-host,owner,user,port,password
-vmx-coba012,-,admin,22,foo
-vmx-cob011,-,admin,22,bar

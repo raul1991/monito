@@ -8,10 +8,18 @@ class CommandRunner(object):
     def __init__(self, config):
         print("Command runner initialized")
         self.config = config
-        self.filename = os.environ.get("PRIVATE_KEY")
+        self.filename = os.environ.get("PRIVATE_KEY", self.get_default_path())
         self.password = os.environ.get('SERVERS_PASSWORD', "")
         self.machines_file = config['machines']
         self.cmd = config['command']
+
+    """
+    Returns the default path to .ssh folder inside the home directory.
+    Considering this tool is only supported for linux machine, this should be fine as a default path
+    """
+    def get_default_path(self):
+        print("Default path is: ")
+        return os.environ.get("HOME") + "/.ssh/id_rsa.pub"
 
     def perform_parallel_run(self) -> []:
         results = []

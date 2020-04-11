@@ -39,7 +39,8 @@ I use it for the same purpose and infact made it because of this reason as well.
     * Run the dashboard app
         - `python app.py`
     * Export these environment variables for the pinger script
-        - `export SERVERS_PASSWORD=PASSWORDS_YOU_USE_TO_ACCESS_SERVERS`
+        - `export SERVERS_PASSWORD=PASSWORDS_YOU_USE_TO_ACCESS_SERVERS` (optional)
+        The below env variable if not provided, this (${HOME}/.ssh/id_rsa.pub) will be used.
         - `export PRIVATE_KEY=/path/to/home/.ssh/id_rsa.pub`
     * Run the script for getting the live users
         - `cd pinger/api && python Ping.py ../resources/config.ini`
