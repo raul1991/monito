@@ -1,12 +1,12 @@
 from: "admin@Monito"
 "${recipients}"
-Subject: Machine status change notification
+Subject: Please don't use the machine ${machine}
 Content-Type: text/html
 Hi,
 
 <br/>
 
-<b>${owner}</b> is working on ${machine} machine. Please ask the owner before you use it.
+<b>${owner}</b> is working on ${machine} machine. Please ask the him/her before you use it.
 
 <br/>
 
