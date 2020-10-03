@@ -1,5 +1,5 @@
 from: "admin@Monito"
-to:"${recipients}"
+"${recipients}"
 Subject: Machine status change notification
 Content-Type: text/html
 Hi,
