@@ -1,5 +1,5 @@
 from: "admin@Monito"
-to:"${recipients}"
+"${recipients}"
 Subject: Someone just logged into your machine ${machine}
 Content-Type: text/html
 Hi ${owner},
