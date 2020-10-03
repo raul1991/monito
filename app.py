@@ -212,10 +212,11 @@ def send_mail_if_unauthorized_access(machine, owner_vdaIP):
 def format_recipients(mail_recipients):
     txt = "to: {email}"
     recipient_header = []
-    if len(mail_recipients) > 0:
-        for mail in mail_recipients:
+    if len(mail_recipients) > 0 and ',' in mail_recipients:
+        for mail in mail_recipients.split(","):
             recipient_header.append(txt.format(email=mail))
-        return '\n'.join(recipient_header)
+            # prepend a \ so as to provide multiline args for bash inputs.
+        return '\\\n'.join(recipient_header)
     else:
         return mail_recipients
 
@@ -223,9 +224,13 @@ def format_recipients(mail_recipients):
 def send_email(email, machine, template_name, reason):
     if email:
         capitalized_owner = machine.owner[0].upper() + machine.owner[1:]
-        print("Sending an email for {0} to {1}".format(reason, email))
+        print("Sending an email")
+        recipients = format_recipients(email)
+        print("===================")
+        print(recipients)
+        print("====================")
         Popen(["./send_mail.sh", "email_templates/" + template_name,
-               capitalized_owner, machine.IP, format_recipients(machine.active_users), email])
+               capitalized_owner, machine.IP, machine.active_users, recipients])
     else:
         print("Email for {0} not found".format(machine.owner))
 
