@@ -11,6 +11,17 @@ projectDir = os.path.dirname(os.path.abspath(__file__))
 # Path for database in app's directory
 databaseFile = "sqlite:///{}".format(os.path.join(projectDir, "Monito.db"))
 
+# cache for trespassing emails
+# {
+#     "m1" : {
+#         "owner": "o1",
+#         "alerted": "true/false"
+#         "trespasser": "alice"
+#     }
+# }
+# if o1 was last notified about the trespassing on machine m1 by trespasser, alerted should true and shall not be alerted anymore.
+
+cache = {}
 # constants
 UNALLOCATED = '-'
 app = Flask(__name__)
@@ -153,12 +164,49 @@ def convert_to_list(users):
     return [users.strip()]
 
 
+def is_same_trespasser(last_trespassers, curr_trespassers):
+    print("last: " + str(last_trespassers))
+    print("current trespassers: " + str(curr_trespassers))
+    # if lists differ, trespassers are different this time.
+    if abs(len(last_trespassers) - len(curr_trespassers)) > 0:
+        return False
+
+    for last in last_trespassers:
+        if last not in curr_trespassers:
+            return False
+    return True
+
+
 def send_mail_if_unauthorized_access(machine, owner_vdaIP):
     users = convert_to_list(machine.active_users)
     if not is_machine_free(machine) and is_trespassed(users, owner_vdaIP):
         email = get_user_email(machine.owner)
-        print("Email sending for unauthorized_access has been disabled to avoid flooding")
-        #send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+        ip = machine.IP
+        # print("Email sending for unauthorized_access has been disabled to avoid flooding")
+        if ip in cache:
+            if cache[ip]['owner'] == email and 'trespassers' in cache[ip] and is_same_trespasser(cache[ip]['trespassers'], users):
+                if cache[ip]['alerted'] == 'false':
+                    cache[ip]['alerted'] = 'true'
+                    cache[ip]['trespassers'] = users
+                    send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+                else:
+                    cache[ip]['trespassers'] = users
+                    print("No email will be sent. User has been alerted before about this trespass")
+            else:
+                print("Either owner for this machine or the trespasser seems to be different")
+                print("Adding this entry into cache")
+                cache[ip]['owner'] = email
+                cache[ip]['alerted'] = 'true'
+                cache[ip]['trespassers'] = users
+                send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+        else:
+            print("New machine has been trespassed")
+            cache[ip] = {}
+            cache[ip]['owner'] = email
+            cache[ip]['alerted'] = 'true'
+            cache[ip]['trespassers'] = users
+            send_email(email, machine, "unauthorized_access_mail.txt", "Unauthorized access")
+    print(cache)
 
 
 def send_email(email, machine, template_name, reason):
