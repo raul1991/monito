@@ -17,7 +17,7 @@ function getVisitors
 	team="$2"
 	user="$3"
 	echo "Running ${cmd} on ${machine}"
-	ssh "${user}@${machine}" -q -i "${key_file}" -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o BatchMode=yes exit
+	ssh "${user}@${machine}" -q -i "${key_file}" -o ConnectTimeout=10 -o StrictHostKeyChecking=no -o BatchMode=yes exit
 	isMachineUp=$?
 	if [[ "$isMachineUp" -ne 0 ]];then
 		echo "Machine is down"
