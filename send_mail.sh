@@ -1,6 +1,9 @@
 #!/bin/bash
 
-. ./.env
+if [[ -e ./.env ]];then
+  . ./.env
+fi
+
 USE_GMAIL=${USE_GMAIL:-false}
 function send_email()
 {
