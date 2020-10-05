@@ -212,7 +212,7 @@ def send_mail_if_unauthorized_access(machine, owner_vdaIP):
 def format_recipients(mail_recipients):
     txt = "to: {email}"
     recipient_header = []
-    if len(mail_recipients) > 0 and ',' in mail_recipients:
+    if len(mail_recipients) > 0:
         for mail in mail_recipients.split(","):
             recipient_header.append(txt.format(email=mail))
             # prepend a \ so as to provide multiline args for bash inputs.
