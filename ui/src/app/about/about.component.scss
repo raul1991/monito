@@ -1,0 +1,16 @@
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  padding: 75px;
+
+  & img {
+    width: 250px;
+    height: auto;
+  }
+}
+
+.lead {
+  text-align: justify;
+}

@@ -1,0 +1,27 @@
+<div class="navbar navbar-dark bg-light shadow-sm">
+  <div class="container d-flex justify-content-between">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <img
+        src="/assets/images/Monito-1-dark.png"
+        height="40"
+        width="150"
+        alt="Monito"
+    /></a>
+    <nav class="my-2 my-md-0 mr-md-3" *ngIf="!isLoggedIn">
+      <a
+        class="btn btn-outline-primary text-uppercase"
+        routerLink="/auth/register"
+        style="margin-right: 10px"
+        >Signup</a
+      >
+      <a class="btn btn-outline-primary text-uppercase" routerLink="/auth/login"
+        >LOGIN</a
+      >
+    </nav>
+    <nav class="my-2 my-md-0 mr-md-3" *ngIf="isLoggedIn">
+      <a class="p-2 text-dark" style="margin-right: 10px">Contact</a>
+      <!-- href="mailto:{{ author }}?Subject=Monito%20Feedback" -->
+      <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
+    </nav>
+  </div>
+</div>

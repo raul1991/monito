@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="monito-login-wrapper row justify-content-center">
+    <div class="col-md-8 col-sm-8 col-lg-8">
+      <form [formGroup]="form" (ngSubmit)="processLogin(form.value)">
+        <div class="form-group">
+          <label for="username">Signum</label>
+          <input
+            class="form-control"
+            type="username"
+            id="username"
+            aria-describedby="usernamehelp"
+            placeholder="Enter your username"
+            name="username"
+            formControlName="username"
+          />
+        </div>
+        <!-- <label>Error label</label> -->
+        <button
+          type="submit"
+          class="btn btn-block btn-outline-primary"
+          (onSubmit)="processLogin()"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
